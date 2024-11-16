@@ -4,10 +4,10 @@ import globals from 'globals';
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
-  { languageOptions: 
-    {
-      globals: globals.node 
-    } ,
+  {
+    languageOptions: {
+      globals: globals.node
+    },
     plugins: {
       'simple-import-sort': simpleImportSort
     },
