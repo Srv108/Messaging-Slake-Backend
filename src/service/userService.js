@@ -1,6 +1,8 @@
 import bcrypt from 'bcrypt';
+import { StatusCodes } from 'http-status-codes';
 
 import userRepository from '../repository/userRepository.js';
+import ClientError from '../utils/Errors/clientError.js';
 import ValidationError from '../utils/Errors/validationError.js';
 import { generateToken } from '../utils/jwt/jwtUtils.js';
 
@@ -40,12 +42,12 @@ export const SingInService = async (userDetails) => {
                 : await userRepository.getUserByUsername(userDetails.username);
 
         if (!user) {
-            throw {
-                status: 400,
-                message: 'User Does Not Exist'
-            };
+            throw new ClientError({
+                explanation: 'Invalid data sent from the client',
+                message: 'No registered users  found with this email',
+                statusCodes: StatusCodes.NOT_FOUND
+            });
         }
-
 
         const isValidPassword = bcrypt.compareSync(
             userDetails.password,
@@ -53,10 +55,11 @@ export const SingInService = async (userDetails) => {
         );
 
         if (!isValidPassword) {
-            throw {
-                status: 401,
-                message: 'Invalid Password'
-            };
+            throw new ClientError({
+                explanation: 'Invalid data sent from the client',
+                message: 'Invalid password, please try again',
+                statusCode: StatusCodes.BAD_REQUEST
+            });
         }
 
         const token = await generateToken({
@@ -64,7 +67,12 @@ export const SingInService = async (userDetails) => {
             username: user.username,
             id: user._id
         });
-        return token;
+        return {
+            username: user.username,
+            avatar: user.avatar,
+            email: user.email,
+            token: token
+        };
     } catch (error) {
         console.log(error);
         throw error;
@@ -72,30 +80,29 @@ export const SingInService = async (userDetails) => {
 };
 
 const validateLoginDetails = (userDetails) => {
-    console.log("passing through validateLoginDetails");
-    let status = 402
     if (!userDetails.loginType) {
-        throw {
-            status: status,
-            message: 'Login Type Required'
-        }
+        throw new ClientError({
+            explanation: 'Invalid data sent from the client',
+            message: 'Login Type Required',
+            statusCodes: StatusCodes.NOT_FOUND
+        });
     }
 
-    if (userDetails.loginType === "username" && !userDetails.username) {
-        throw {
-            status: status,
-            message: 'Username is required for username login.'
-        }
+    if (userDetails.loginType === 'username' && !userDetails.username) {
+        throw new ClientError({
+            explanation: 'Invalid data sent from the client',
+            message: 'Username is required for username login.',
+            statusCodes: StatusCodes.NOT_FOUND
+        });
     }
 
-    if (userDetails.loginType === "email" && !userDetails.email) {
-        throw {
-            status: status,
-            message: 'Email is required for email login.'
-        }
+    if (userDetails.loginType === 'email' && !userDetails.email) {
+        throw new ClientError({
+            explanation: 'Invalid data sent from the client',
+            message: 'Email is required for email login.',
+            statusCodes: StatusCodes.NOT_FOUND
+        });
     }
 
     return true; // Validation passed
 };
-    
-
