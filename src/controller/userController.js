@@ -7,7 +7,6 @@ import {
     successResponse
 } from '../utils/common/responseObject.js';
 
-
 export const signUp = async (req, res) => {
     try {
         const user = req.body;
@@ -30,12 +29,14 @@ export const signUp = async (req, res) => {
     }
 };
 
-export const signIn = async (req,res) => {
-    try{
+export const signIn = async (req, res) => {
+    try {
         const response = await SingInService(req.body);
-        return res.status(StatusCodes.ACCEPTED).json(successResponse(response,'SignedIn successfully'));
-    }catch(error){
-        if(error.statusCodes){
+        return res
+            .status(StatusCodes.ACCEPTED)
+            .json(successResponse(response, 'SignedIn successfully'));
+    } catch (error) {
+        if (error.statusCodes) {
             return res
                 .status(error.statusCodes)
                 .json(customErrorResponse(error));
@@ -44,4 +45,4 @@ export const signIn = async (req,res) => {
             .status(StatusCodes.INTERNAL_SERVER_ERROR)
             .json(internalErrorResponse(error));
     }
-}
+};

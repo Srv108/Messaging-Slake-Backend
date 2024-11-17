@@ -30,35 +30,72 @@ export const SignUpService = async (data) => {
 };
 
 export const SingInService = async (userDetails) => {
-    try{
+    try {
+        validateLoginDetails(userDetails); // to validate the login types.....
 
         // find user exist or not
-        const user = ((userDetails.input === 'email') 
-            ? (await userRepository.getByEmail(userDetails.email)) 
-            : (await userRepository.getUserByUsername(userDetails.username)));
+        const user =
+            userDetails.loginType === 'email'
+                ? await userRepository.getByEmail(userDetails.email)
+                : await userRepository.getUserByUsername(userDetails.username);
 
-        if(!user){
+        if (!user) {
             throw {
                 status: 400,
                 message: 'User Does Not Exist'
-            }
+            };
         }
-        console.log(user);
-        const isValidPassword = bcrypt.compareSync(userDetails.password,user.password);
 
-        if(!isValidPassword){
-            throw{
+
+        const isValidPassword = bcrypt.compareSync(
+            userDetails.password,
+            user.password
+        );
+
+        if (!isValidPassword) {
+            throw {
                 status: 401,
                 message: 'Invalid Password'
-            }
+            };
         }
-        
-        const token = await generateToken({email: user.email,username: user.username,id: user._id});
-        return token;
 
-    }catch(error){
+        const token = await generateToken({
+            email: user.email,
+            username: user.username,
+            id: user._id
+        });
+        return token;
+    } catch (error) {
         console.log(error);
         throw error;
     }
-}
+};
+
+const validateLoginDetails = (userDetails) => {
+    console.log("passing through validateLoginDetails");
+    let status = 402
+    if (!userDetails.loginType) {
+        throw {
+            status: status,
+            message: 'Login Type Required'
+        }
+    }
+
+    if (userDetails.loginType === "username" && !userDetails.username) {
+        throw {
+            status: status,
+            message: 'Username is required for username login.'
+        }
+    }
+
+    if (userDetails.loginType === "email" && !userDetails.email) {
+        throw {
+            status: status,
+            message: 'Email is required for email login.'
+        }
+    }
+
+    return true; // Validation passed
+};
+    
 

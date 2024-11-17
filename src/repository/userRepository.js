@@ -12,9 +12,9 @@ const userRepository = {
         return user;
     },
     getUserByUsername: async function (name) {
-        const user = User.findOne({ username: name }); 
+        const user = User.findOne({ username: name });
         return user;
-    },
+    }
 };
 
 export default userRepository;
