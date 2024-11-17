@@ -1,9 +1,13 @@
 import { z } from 'zod';
 
 export const userSignUpSchema = z.object({
-  email: z.string().email(),
-  userName: z.string().min(3),
-  password: z.string()
+    email: z.string().email(),
+    username: z.string().min(3),
+    password: z.string()
 });
 
-export const userSignInSchema = z.object({});
+export const userSignInSchema = z.object({
+    email: z.string().email().optional(), // Validate email if provided
+    username: z.string().min(3).optional(), // Validate username if provided
+    password: z.string()
+});
