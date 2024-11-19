@@ -1,40 +1,42 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
-const workspaceSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: [true,'WorkSpace name is required'],
-        unique: true,
-    },
-    members: [
-        {
-            memberId: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'User',
-            },
-            role: {
-                type: String,
-                enum: ['admin','member'],
-                default: 'member'
+const workspaceSchema = new mongoose.Schema(
+    {
+        name: {
+            type: String,
+            required: [true, 'WorkSpace name is required'],
+            unique: true
+        },
+        members: [
+            {
+                memberId: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: 'User'
+                },
+                role: {
+                    type: String,
+                    enum: ['admin', 'member'],
+                    default: 'member'
+                }
             }
-        }
-    ],
-    description: {
-        type: String,
+        ],
+        description: {
+            type: String
+        },
+        joinCode: {
+            type: String,
+            required: [true, 'code is required to join server']
+        },
+        channels: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Channel'
+            }
+        ]
     },
-    joinCode: {
-        type: String,
-        required: [true,'code is required to join server'],
-    },
-    channels: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Channel'
-        }
-    ]
+    { timestamps: true }
+);
 
-},{timestamps: true});
-
-const WorksSpace = mongoose.model('WorksSpace',workspaceSchema);
+const WorksSpace = mongoose.model('WorksSpace', workspaceSchema);
 
 export default WorksSpace;

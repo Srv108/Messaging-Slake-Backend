@@ -1,19 +1,21 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
-const channelSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: [true,'Channel name is required'],
-        unique: true,
+const channelSchema = new mongoose.Schema(
+    {
+        name: {
+            type: String,
+            required: [true, 'Channel name is required'],
+            unique: true
+        },
+        workspaceId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'WorkSpace',
+            required: [true, 'workspace id is required']
+        }
     },
-    workspaceId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'WorkSpace',
-        required: [true,'workspace id is required']
-    }
+    { timestamps: true }
+);
 
-},{timestamps: true});
-
-const Channel = mongoose.model('Channel',channelSchema);
+const Channel = mongoose.model('Channel', channelSchema);
 
 export default Channel;
