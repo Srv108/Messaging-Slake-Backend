@@ -1,14 +1,15 @@
 import { StatusCodes } from 'http-status-codes';
 
-import Member from '../schema/message.js';
-import WorksSpace from '../schema/workspace.js';
+import User from '../schema/user.js';
+import WorkSpace from '../schema/workspace.js';
 import ClientError from '../utils/Errors/clientError.js';
+import channelRepository from './channelRepository.js';
 import crudRepository from './crudRepository.js';
 
 const workspaceRepository = {
-    ...crudRepository(WorksSpace),
+    ...crudRepository(WorkSpace),
     getWorkspaceByName: async function (workspaceName) {
-        const workspace = await WorksSpace.findOne({
+        const workspace = await WorkSpace.findOne({
             name: workspaceName
         });
         if (!workspace) {
@@ -22,7 +23,7 @@ const workspaceRepository = {
         return workspace;
     },
     getWorkspaceByJoinCode: async function (joinCode) {
-        const workspace = await WorksSpace.findOne({
+        const workspace = await WorkSpace.findOne({
             joinCode: joinCode
         });
         if (!workspace) {
@@ -36,7 +37,7 @@ const workspaceRepository = {
         return workspace;
     },
     addMemberToWorkspace: async function (workspaceId, memberId, role) {
-        const workspace = await WorksSpace.findById(workspaceId);
+        const workspace = await WorkSpace.findById(workspaceId);
 
         if (!workspace) {
             throw new ClientError({
@@ -46,7 +47,7 @@ const workspaceRepository = {
             });
         }
 
-        const isValidUser = await Member.findById(memberId);
+        const isValidUser = await User.findById(memberId);
         if (!isValidUser) {
             throw new ClientError({
                 explanation: 'invalid data sent by the client',
@@ -55,7 +56,7 @@ const workspaceRepository = {
             });
         }
 
-        // const isMemberAlreadyInWorkspace = WorksSpace.members.findOne('members.memberId': memberId);
+        // const isMemberAlreadyInWorkspace = WorkSpace.members.findOne('members.memberId': memberId);
         const isMemberAlreadyInWorkspace = workspace.members.find(
             (members) => members.memberId == memberId
         );
@@ -78,7 +79,8 @@ const workspaceRepository = {
         return workspace;
     },
     addChannelToWorkspace: async function (workspaceId, channelName) {
-        const workspace = await WorksSpace.findById(workspaceId);
+        const workspace = await WorkSpace.findById(workspaceId)
+        .populate('channels');
 
         if (!workspace) {
             throw new ClientError({
@@ -102,21 +104,23 @@ const workspaceRepository = {
         }
 
         // now create a channel with ChannelName
-        const channel = crudRepository.create({
+        const channel = channelRepository.create({
             name: channelName,
             workspaceId: workspaceId
         });
 
         workspace.channels.push(channel);
         await workspace.save();
+
+        return workspace;
     },
     fetchAllWorkspceByMemberId: async function (memberId) {
-        const workspace = await WorksSpace.find({
+        const workspace = await WorkSpace.find({
             'members.memberId': memberId
         }).populate('members.memberId', 'username email avatar');
 
         return workspace;
-    }
+    },
 };
 
 export default workspaceRepository;

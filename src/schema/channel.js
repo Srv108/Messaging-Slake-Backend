@@ -5,7 +5,7 @@ const channelSchema = new mongoose.Schema(
         name: {
             type: String,
             required: [true, 'Channel name is required'],
-            unique: true
+            // unique: true
         },
         workspaceId: {
             type: mongoose.Schema.Types.ObjectId,
