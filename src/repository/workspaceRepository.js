@@ -8,6 +8,14 @@ import crudRepository from './crudRepository.js';
 
 const workspaceRepository = {
     ...crudRepository(WorkSpace),
+    getWorkspaceDetailsById: async function (workspaceId) {
+        const workspace = await WorkSpace.findById(workspaceId)
+            .populate('members.memberId', 'username email avatar')
+            .populate('channels');
+
+        console.log(workspace);
+        return workspace;
+    },
     getWorkspaceByName: async function (workspaceName) {
         const workspace = await WorkSpace.findOne({
             name: workspaceName
@@ -29,7 +37,7 @@ const workspaceRepository = {
         if (!workspace) {
             throw new ClientError({
                 explanation: 'invalid data sent by the client',
-                message: 'workspace not found',
+                message: 'Invalid Join Code',
                 statusCodes: StatusCodes.NOT_FOUND
             });
         }
@@ -79,9 +87,10 @@ const workspaceRepository = {
         return workspace;
     },
     addChannelToWorkspace: async function (workspaceId, channelName) {
-        const workspace = await WorkSpace.findById(workspaceId)
-        .populate('channels');
+        const workspace =
+            await WorkSpace.findById(workspaceId).populate('channels');
 
+        console.log('repositories layer', workspace);
         if (!workspace) {
             throw new ClientError({
                 explanation: 'invalid data sent by the client side',
@@ -104,7 +113,7 @@ const workspaceRepository = {
         }
 
         // now create a channel with ChannelName
-        const channel = channelRepository.create({
+        const channel = await channelRepository.create({
             name: channelName,
             workspaceId: workspaceId
         });
@@ -117,10 +126,12 @@ const workspaceRepository = {
     fetchAllWorkspceByMemberId: async function (memberId) {
         const workspace = await WorkSpace.find({
             'members.memberId': memberId
-        }).populate('members.memberId', 'username email avatar');
+        })
+            .populate('members.memberId', 'username email avatar')
+            .populate('channels', 'name');
 
         return workspace;
-    },
+    }
 };
 
 export default workspaceRepository;

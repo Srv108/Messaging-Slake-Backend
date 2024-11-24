@@ -1,4 +1,3 @@
-
 export default function crudRepository(model) {
     return {
         create: async function (data) {
@@ -23,7 +22,7 @@ export default function crudRepository(model) {
             });
             return updatedDoc;
         },
-        deleteMany: async function (modelIds){
+        deleteMany: async function (modelIds) {
             const response = await model.deleteMany({
                 _id: {
                     $in: modelIds
