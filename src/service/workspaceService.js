@@ -314,7 +314,7 @@ export const addChannelToWorkspaceService = async (
 };
 
 export const getWorkspaceService = async (workspaceId, memberId) => {
-     // eslint-disable-next-line no-useless-catch
+    // eslint-disable-next-line no-useless-catch
     try {
         const workspace = await workspaceRepository.getById(workspaceId);
         if (!workspace) {
