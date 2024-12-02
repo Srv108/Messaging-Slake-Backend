@@ -9,8 +9,7 @@ import {
 
 export const signUp = async (req, res) => {
     try {
-        const user = req.body;
-        const response = await SignUpService(user);
+        const response = await SignUpService(req.body);
         return res.status(StatusCodes.OK).json({
             success: true,
             messgae: 'User created successfully',

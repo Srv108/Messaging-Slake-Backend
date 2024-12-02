@@ -7,7 +7,7 @@ const channelRepository = {
         const response = Channel.findOne({ name: channelName });
         return response;
     },
-    getChannelWithWorkspace: async function (channelId){
+    getChannelWithWorkspace: async function (channelId) {
         const response = Channel.findById(channelId).populate('workspaceId');
         return response;
     }

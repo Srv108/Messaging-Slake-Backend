@@ -1,16 +1,23 @@
-import { StatusCodes } from "http-status-codes";
+import { StatusCodes } from 'http-status-codes';
 
-import { getChannelByIdService } from "../service/channelService.js";
-import { customErrorResponse, internalErrorResponse, successResponse } from "../utils/common/responseObject.js";
+import { getChannelByIdService } from '../service/channelService.js';
+import {
+    customErrorResponse,
+    internalErrorResponse,
+    successResponse
+} from '../utils/common/responseObject.js';
 
-export const getChannelByIdController = async (req,res) => {
-    try{
-        const channel = getChannelByIdService(req.params.id,req.user);
-        return res.status(StatusCodes.OK).json(successResponse({
-            data: channel,
-            message: 'Channel fetched successfully !'
-        }))
-    }catch(error){
+export const getChannelByIdController = async (req, res) => {
+    try {
+        const channel = await getChannelByIdService(req.params.id, req.user);
+        console.log('channel in controller layer ', channel);
+        return res.status(StatusCodes.OK).json(
+            successResponse({
+                data: channel,
+                message: 'Channel fetched successfully !'
+            })
+        );
+    } catch (error) {
         console.log(
             'Controller layer get ChannelById Controller error ',
             error
@@ -24,4 +31,4 @@ export const getChannelByIdController = async (req,res) => {
             .status(StatusCodes.INTERNAL_SERVER_ERROR)
             .json(internalErrorResponse(error));
     }
-}
+};

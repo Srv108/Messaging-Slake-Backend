@@ -9,7 +9,6 @@ const userSchema = new mongoose.Schema(
             unique: true,
             trim: true,
             maxlength: 100,
-            uniqueCaseInsensitive: true,
             match: [
                 // eslint-disable-next-line no-useless-escape
                 /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
@@ -25,8 +24,6 @@ const userSchema = new mongoose.Schema(
             unique: true,
             required: [true, 'Username is required'],
             trim: true,
-            lowercase: true,
-            uniqueCaseInsensitive: true,
             match: [/^[a-zA-Z0-9-_.]+$/, 'Invalid Username']
         },
         avatar: {
@@ -37,6 +34,7 @@ const userSchema = new mongoose.Schema(
 );
 
 userSchema.pre('save', function saveUser(next) {
+    
     const user = this;
 
     const SALT = bcrypt.genSaltSync(9);
@@ -45,6 +43,7 @@ userSchema.pre('save', function saveUser(next) {
     user.avatar = `https://api.multiavatar.com/${user.userName}`;
     next();
 });
+userSchema.index({ username: 1 }, { unique: true }); // Enforce unique constraint explicitly
 const User = mongoose.model('User', userSchema);
 
 export default User;

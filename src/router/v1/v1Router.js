@@ -8,6 +8,6 @@ const router = express.Router();
 
 router.use('/users', userRouter);
 router.use('/workspace', workspaceRouter);
-router.use('/channel',channelRouter);
+router.use('/channel', channelRouter);
 
 export default router;

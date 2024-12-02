@@ -1,9 +1,11 @@
 import { StatusCodes } from 'http-status-codes';
 import { v4 as uuidv4 } from 'uuid';
 
+import { addEmailToMailQueue } from '../Producer/mailQueueProducer.js';
 import channelRepository from '../repository/channelRepository.js';
 import userRepository from '../repository/userRepository.js';
 import workspaceRepository from '../repository/workspaceRepository.js';
+import {workspaceJoinMail} from '../utils/common/mailObject.js';
 import ClientError from '../utils/Errors/clientError.js';
 import ValidationError from '../utils/Errors/validationError.js';
 
@@ -206,7 +208,7 @@ export const addMemberToWorkspaceService = async (
     role,
     userId
 ) => {
-     // eslint-disable-next-line no-useless-catch
+    // eslint-disable-next-line no-useless-catch
     try {
         const workspace = await workspaceRepository.getById(workspaceId);
         if (!workspace) {
@@ -228,14 +230,23 @@ export const addMemberToWorkspaceService = async (
             });
         }
 
-        const isValidUser = await isUserAdminOfWorkspace(userId, workspace);
-        if (!isValidUser) {
+        const isAdmin = await isUserAdminOfWorkspace(userId, workspace);
+        if (!isAdmin) {
             throw new ClientError({
                 explanation: [
                     'User who is adding member not the admin of the workspace'
                 ],
                 message: 'User is not admin of the workspace',
                 statusCodes: StatusCodes.FORBIDDEN
+            });
+        }
+
+        const isValidUser = await userRepository.getById(memberId);
+        if (!isValidUser) {
+            throw new ClientError({
+                explanation: ['Invalid UserId'],
+                message: 'User Not Found',
+                statusCodes: StatusCodes.NOT_FOUND
             });
         }
 
@@ -254,6 +265,13 @@ export const addMemberToWorkspaceService = async (
             memberId,
             role
         );
+        console.log('Email : ',isValidUser.email);
+        console.log(isValidUser);
+        addEmailToMailQueue({
+            ...workspaceJoinMail(workspace),
+            to: isValidUser.email
+        });
+
         return response;
     } catch (error) {
         throw error;
@@ -271,7 +289,7 @@ export const addChannelToWorkspaceService = async (
     channelName,
     userId
 ) => {
-     // eslint-disable-next-line no-useless-catch
+    // eslint-disable-next-line no-useless-catch
     try {
         const workspace =
             await workspaceRepository.getWorkspaceDetailsById(workspaceId);
