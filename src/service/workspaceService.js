@@ -5,7 +5,7 @@ import { addEmailToMailQueue } from '../Producer/mailQueueProducer.js';
 import channelRepository from '../repository/channelRepository.js';
 import userRepository from '../repository/userRepository.js';
 import workspaceRepository from '../repository/workspaceRepository.js';
-import {workspaceJoinMail} from '../utils/common/mailObject.js';
+import { workspaceJoinMail } from '../utils/common/mailObject.js';
 import ClientError from '../utils/Errors/clientError.js';
 import ValidationError from '../utils/Errors/validationError.js';
 
@@ -265,7 +265,7 @@ export const addMemberToWorkspaceService = async (
             memberId,
             role
         );
-        console.log('Email : ',isValidUser.email);
+        console.log('Email : ', isValidUser.email);
         console.log(isValidUser);
         addEmailToMailQueue({
             ...workspaceJoinMail(workspace),
@@ -357,3 +357,5 @@ export const getWorkspaceService = async (workspaceId, memberId) => {
         throw error;
     }
 };
+
+

@@ -11,7 +11,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use('/ui',bullServerAdapter.getRouter());
+app.use('/ui', bullServerAdapter.getRouter());
 
 app.get('/ping', isAuthenticated, (req, res) => {
     res.status(StatusCodes.OK).json({

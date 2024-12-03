@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
 
-import { APP_PASS } from './serverConfig.js';
+import { APP_PASS, MAIL_ID } from './serverConfig.js';
 
 export default nodemailer.createTransport({
     service: 'Gmail',
@@ -8,8 +8,7 @@ export default nodemailer.createTransport({
     port: 465,
     secure: true,
     auth: {
-        user: 'lucifer4864yd@gmail.com',
+        user: MAIL_ID,
         pass: APP_PASS
     }
 });
-

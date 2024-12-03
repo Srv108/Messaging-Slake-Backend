@@ -3,6 +3,10 @@ import crudRepository from './crudRepository.js';
 
 const userRepository = {
     ...crudRepository(User),
+    getUserDetails: async function(id){
+        const user = User.findById(id).select('-password');
+        return user;
+    },
     getByUsername: async function (name) {
         const user = User.findOne({ username: name }).select('-password'); // exclude password
         return user;
