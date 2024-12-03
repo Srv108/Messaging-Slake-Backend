@@ -1,11 +1,11 @@
-import { StatusCodes } from "http-status-codes";
+import { StatusCodes } from 'http-status-codes';
 
-import userRepository from "../repository/userRepository.js";
-import workspaceRepository from "../repository/workspaceRepository.js";
-import ClientError from "../utils/Errors/clientError.js";
-import { isUserMemberOfWorkspace } from "./workspaceService.js";
+import userRepository from '../repository/userRepository.js';
+import workspaceRepository from '../repository/workspaceRepository.js';
+import ClientError from '../utils/Errors/clientError.js';
+import { isUserMemberOfWorkspace } from './workspaceService.js';
 
-export const isUserMemberOfWorkspaceService = async (userId,workspaceId) => {
+export const isUserMemberOfWorkspaceService = async (userId, workspaceId) => {
     // eslint-disable-next-line no-useless-catch
     try {
         const workspace = await workspaceRepository.getById(workspaceId);
@@ -18,7 +18,7 @@ export const isUserMemberOfWorkspaceService = async (userId,workspaceId) => {
             });
         }
 
-        const isValidUser = await isUserMemberOfWorkspace(userId,workspace);
+        const isValidUser = await isUserMemberOfWorkspace(userId, workspace);
         if (!isValidUser) {
             throw new ClientError({
                 explanation: ['Invalid UserId'],
@@ -31,4 +31,4 @@ export const isUserMemberOfWorkspaceService = async (userId,workspaceId) => {
     } catch (error) {
         throw error;
     }
-}
+};

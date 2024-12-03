@@ -1,26 +1,31 @@
 import { StatusCodes } from 'http-status-codes';
 
-import { isUserMemberOfWorkspaceService } from '../service/memberService.js';
+import { getMessageService } from '../service/messageService.js';
 import {
     customErrorResponse,
     internalErrorResponse,
     successResponse
 } from '../utils/common/responseObject.js';
 
-export const isUserMemberOfWorkspaceController = async (req, res) => {
+export const getMessageController = async (req, res) => {
     try {
-        const response = await isUserMemberOfWorkspaceService(
+        const messages = await getMessageService(
+            {
+                channelId: req.params.channelId
+            },
             req.user,
-            req.params.id
+            req.query.page || 1,
+            req.query.limit || 20
         );
+
         return res.status(StatusCodes.OK).json(
             successResponse({
-                data: response,
-                message: 'User Found'
+                data: messages,
+                messgae: 'Message fetched successfully'
             })
         );
     } catch (error) {
-        console.log('Controller layer isUserMemberOfWorkspace error ', error);
+        console.log('Controller layer error ', error);
         if (error.statusCodes) {
             return res
                 .status(error.statusCodes)

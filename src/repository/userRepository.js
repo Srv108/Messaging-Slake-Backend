@@ -3,7 +3,7 @@ import crudRepository from './crudRepository.js';
 
 const userRepository = {
     ...crudRepository(User),
-    getUserDetails: async function(id){
+    getUserDetails: async function (id) {
         const user = User.findById(id).select('-password');
         return user;
     },

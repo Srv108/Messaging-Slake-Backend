@@ -5,6 +5,10 @@ import { isAuthenticated } from '../../middlewares/authMiddleware.js';
 
 const router = express.Router();
 
-router.get('/workspace/:id',isAuthenticated,isUserMemberOfWorkspaceController);
+router.get(
+    '/workspace/:id',
+    isAuthenticated,
+    isUserMemberOfWorkspaceController
+);
 
 export default router;
