@@ -1,5 +1,6 @@
 import { createServer } from 'node:http';
 
+import cors from 'cors';
 import express from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { Server } from 'socket.io';
@@ -13,11 +14,12 @@ import messageSocketHandler from './controller/messageSocketController.js';
 import { isAuthenticated } from './middlewares/authMiddleware.js';
 
 const app = express();
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
 const server = createServer(app);
 const io = new Server(server);
+
+app.use(cors())
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use('/ui', bullServerAdapter.getRouter());
 
