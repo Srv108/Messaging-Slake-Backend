@@ -41,3 +41,8 @@ export const getMessageService = async (messageParams, userId, page, limit) => {
         throw error;
     }
 };
+
+export const createMessage = (data) => {
+    const message = MessageRepository.create(data);
+    return message;
+}

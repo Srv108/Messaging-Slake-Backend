@@ -9,11 +9,11 @@ import {
 
 export const getChannelByIdController = async (req, res) => {
     try {
-        const channel = await getChannelByIdService(req.params.id, req.user);
-        console.log('channel in controller layer ', channel);
+        const response = await getChannelByIdService(req.params.id, req.user);
+        console.log('channel in controller layer ', response);
         return res.status(StatusCodes.OK).json(
             successResponse({
-                data: channel,
+                data: response,
                 message: 'Channel fetched successfully !'
             })
         );

@@ -11,6 +11,13 @@ const MessageRepository = {
             .populate('senderId', 'username email ');
 
         return messages;
+    },
+    getMessage: async function (messageParams) {
+        const messages = Message.find(messageParams)
+            .sort({ createdAt: -1 })
+            .populate('senderId', 'username email ');
+
+        return messages;
     }
 };
 
