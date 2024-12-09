@@ -29,10 +29,20 @@ export const getChannelByIdService = async (channelId, userId) => {
                 statusCodes: StatusCodes.UNAUTHORIZED
             });
         }
-        const message = await MessageRepository.getMessage({channelId});
+        const messages = await MessageRepository.getPaginatedMessage(
+            {
+                channelId
+            },
+            1,
+            20
+        );
         return {
-            channel,
-            message
+            messages,
+            _id: channel._id,
+            name: channel.name,
+            createdAt: channel.createdAt,
+            updatedAt: channel.updatedAt,
+            workspaceId: channel.workspaceId
         };
     } catch (error) {
         console.log('Get ChannelById Service error', error);
