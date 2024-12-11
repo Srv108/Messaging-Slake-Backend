@@ -1,0 +1,55 @@
+<html>
+    <head>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                color: #333;
+            }
+            .container {
+                max-width: 600px;
+                margin: 0 auto;
+                padding: 20px;
+                background-color: #f9f9f9;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+            h1 {
+                color: #4CAF50;
+                font-size: 24px;
+                margin-bottom: 20px;
+            }
+            p {
+                font-size: 16px;
+                line-height: 1.5;
+            }
+            .otp-box {
+                margin-top: 20px;
+                padding: 10px 20px;
+                background-color: #f1f1f1;
+                border-radius: 5px;
+                font-size: 20px;
+                font-weight: bold;
+                color: #333;
+                display: inline-block;
+            }
+            .footer {
+                margin-top: 30px;
+                font-size: 14px;
+                color: #888;
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Verify Your OTP</h1>
+            <p>Dear User,</p>
+            <p>We received a request to verify your email address. To complete the process, please use the OTP code below:</p>
+            <div class="otp-box">${otp}</div>
+            <p>This OTP is valid for the next 5 minutes. If you did not request this, please ignore this message.</p>
+            <div class="footer">
+                <p>&copy; 2024 Saurabh Bharti. </p>
+            </div>
+        </div>
+    </body>
+</html>
