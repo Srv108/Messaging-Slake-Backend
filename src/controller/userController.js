@@ -1,6 +1,6 @@
 import { StatusCodes } from 'http-status-codes';
 
-import { SignUpService, SingInService } from '../service/userService.js';
+import { SignUpService, SingInService, validateEmailAndUsernameService } from '../service/userService.js';
 import {
     customErrorResponse,
     internalErrorResponse,
@@ -45,3 +45,21 @@ export const signIn = async (req, res) => {
             .json(internalErrorResponse(error));
     }
 };
+
+export const validateEmailAndUsernameContoller = async(req,res) => {
+    try {
+        const response = await validateEmailAndUsernameService(req.body);
+        return res
+        .status(StatusCodes.ACCEPTED)
+        .json(successResponse(response, 'Verified Successfully'));
+    } catch (error) {
+        if (error.statusCodes) {
+            return res
+                .status(error.statusCodes)
+                .json(customErrorResponse(error));
+        }
+        return res
+            .status(StatusCodes.INTERNAL_SERVER_ERROR)
+            .json(internalErrorResponse(error));
+    }
+}

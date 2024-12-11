@@ -106,3 +106,22 @@ const validateLoginDetails = (userDetails) => {
 
     return true; // Validation passed
 };
+
+export const validateEmailAndUsernameService = async(userDetails) => {
+    try {
+        const response = await userRepository.getUserByEmailAndUsername(userDetails);
+
+        if(!response || response.length === 0){
+            throw new ClientError({
+                explanation: ['User details sent by the client is invalid'],
+                message: 'User details are incorrect',
+                statusCode: StatusCodes.NOT_FOUND
+            })
+        }
+        
+        return response;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}

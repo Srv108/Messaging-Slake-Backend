@@ -9,5 +9,6 @@ export const userSignUpSchema = z.object({
 export const userSignInSchema = z.object({
     email: z.string().email().optional(), // Validate email if provided
     username: z.string().min(3).optional(), // Validate username if provided
-    password: z.string()
+    password: z.string(),
+    loginType: z.string(),
 });

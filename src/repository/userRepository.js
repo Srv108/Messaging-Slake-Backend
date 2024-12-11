@@ -18,6 +18,10 @@ const userRepository = {
     getUserByUsername: async function (name) {
         const user = User.findOne({ username: name });
         return user;
+    },
+    getUserByEmailAndUsername: async function(userDetails){
+        const user = User.find(userDetails).select('-password');
+        return user;
     }
 };
 

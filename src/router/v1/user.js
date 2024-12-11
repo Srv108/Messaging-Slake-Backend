@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { signIn, signUp } from '../../controller/userController.js';
+import { signIn, signUp, validateEmailAndUsernameContoller } from '../../controller/userController.js';
 import {
     userSignInSchema,
     userSignUpSchema
@@ -9,7 +9,8 @@ import { validate } from '../../validator/zodValidator.js';
 
 const router = express.Router();
 
-router.post('/signUp', validate(userSignUpSchema), signUp);
-router.get('/signIn', validate(userSignInSchema), signIn);
+router.post('/signup', validate(userSignUpSchema), signUp);
+router.post('/signin', validate(userSignInSchema), signIn);
+router.get('/validateuser',validateEmailAndUsernameContoller);
 
 export default router;
