@@ -6,11 +6,13 @@ import {
     userSignUpSchema
 } from '../../validator/userSchema.js';
 import { validate } from '../../validator/zodValidator.js';
+import otpRouter from './otp.js';
 
 const router = express.Router();
 
 router.post('/signup', validate(userSignUpSchema), signUp);
 router.post('/signin', validate(userSignInSchema), signIn);
-router.get('/validateuser',validateEmailAndUsernameContoller);
+router.post('/validateuser',validateEmailAndUsernameContoller);
+router.use('/otpverification',otpRouter);
 
 export default router;

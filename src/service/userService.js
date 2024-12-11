@@ -5,6 +5,7 @@ import userRepository from '../repository/userRepository.js';
 import ClientError from '../utils/Errors/clientError.js';
 import ValidationError from '../utils/Errors/validationError.js';
 import { generateToken } from '../utils/jwt/jwtUtils.js';
+import { generateOtpForUserService } from './otpService.js';
 
 export const SignUpService = async (data) => {
     try {
@@ -109,17 +110,27 @@ const validateLoginDetails = (userDetails) => {
 
 export const validateEmailAndUsernameService = async(userDetails) => {
     try {
-        const response = await userRepository.getUserByEmailAndUsername(userDetails);
+        const isValidEmail = await userRepository.getByEmail(userDetails.email);
 
-        if(!response || response.length === 0){
+        if(!isValidEmail){
             throw new ClientError({
-                explanation: ['User details sent by the client is invalid'],
-                message: 'User details are incorrect',
+                explanation: ['Email sent by the client is invalid'],
+                message: 'Username details are incorrect',
                 statusCode: StatusCodes.NOT_FOUND
             })
         }
-        
-        return response;
+
+        const isValidUsername = await userRepository.getUserByUsername(userDetails.username);
+        if(!isValidUsername){
+            throw new ClientError({
+                explanation: ['Username sent by the client is invalid'],
+                message: 'Username details are incorrect',
+                statusCode: StatusCodes.NOT_FOUND
+            })
+        }
+        console.log(isValidEmail.email);
+        await generateOtpForUserService(isValidEmail.email);
+        return isValidEmail;
     } catch (error) {
         console.log(error);
         throw error;

@@ -7,3 +7,12 @@ export function workspaceJoinMail(workspace) {
         text: `Congratulations! You have been added to the workspace ${workspace.name}`
     };
 }
+
+export function generatedOtpMail (otp){
+    return {
+        from: MAIL_ID,
+        subject: 'Verification Email',
+        text: `<h1>Please confirm your OTP</h1> <br> 
+        <p>Here is your OTP code: ${otp}</p>`
+    }
+}

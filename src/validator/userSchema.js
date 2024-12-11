@@ -12,3 +12,8 @@ export const userSignInSchema = z.object({
     password: z.string(),
     loginType: z.string(),
 });
+
+export const otpVerificationSchema = z.object({
+    email: z.string().email(),
+    otp: z.string()
+});
