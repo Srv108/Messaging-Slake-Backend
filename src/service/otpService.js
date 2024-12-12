@@ -7,6 +7,7 @@ import otpRepository from '../repository/otpRepository.js';
 import userRepository from '../repository/userRepository.js';
 import { generatedOtpMail } from '../utils/common/mailObject.js';
 import ClientError from '../utils/Errors/clientError.js';
+import { generateToken } from '../utils/jwt/jwtUtils.js';
 
 export const generateOtpForUserService = async(email) => {
     try {
@@ -37,8 +38,15 @@ export const generateOtpForUserService = async(email) => {
 
 export const matchOtpService = async(otpObject) => {
     try {
+        const user = await userRepository.getByEmail(otpObject.email);
+        if(!user){
+            throw new ClientError({
+                message: 'Invalid Email',
+                explanation: ['email id sent by the client is invalid'],
+                statuscodes: StatusCodes.NOT_FOUND
+            })
+        }
         const otpDetails = await otpRepository.getOtpByEmail(otpObject.email);
-
         const hashedOtp = otpDetails.otp;
 
         const isValidOtp = bcrypt.compareSync(otpObject.otp,hashedOtp);
@@ -50,10 +58,17 @@ export const matchOtpService = async(otpObject) => {
             })
         }
 
+        const token = await generateToken({
+            id: user._id,
+            email: user.email,
+            username: user.username,
+        },'5m');
+
         return {
             verified: 'ok',
-            email: otpDetails.email,
-            message: 'you can move ahead !'
+            email: user.email,
+            message: 'you can move ahead !',
+            token: token
         }
 
     } catch (error) {

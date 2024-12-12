@@ -14,7 +14,7 @@ const otpSchema = new mongoose.Schema({
     createdAt: { 
         type: Date,
         default: Date.now,
-        expires: '5m'
+        expires: '5m',
     }
     
 },{ timestamps: true })
@@ -23,8 +23,7 @@ otpSchema.pre('save',function saveOtp(next){
     
     const SALT = bcrypt.genSaltSync(9);
     const hashedOtp = bcrypt.hashSync(this.otp,SALT);
-    console.log(this.otp);
-    console.log('Hashed Otp is ' , hashedOtp);
+    
     this.otp = hashedOtp;
     next();
 })

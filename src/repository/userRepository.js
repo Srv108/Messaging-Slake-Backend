@@ -22,7 +22,16 @@ const userRepository = {
     getUserByEmailAndUsername: async function(userDetails){
         const user = User.find(userDetails).select('-password');
         return user;
+    },
+    findByEmailAndUpdate: async function(updateObject){
+        const user = User.findOneAndUpdate(
+            {email: updateObject.email},
+            {password: updateObject.password},
+            {new: true})
+            .select('-password');
+        return user;
     }
+        
 };
 
 export default userRepository;

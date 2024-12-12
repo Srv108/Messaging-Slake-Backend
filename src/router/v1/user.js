@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { signIn, signUp, validateEmailAndUsernameContoller } from '../../controller/userController.js';
+import { signIn, signUp, updatePasswordController, validateEmailAndUsernameContoller } from '../../controller/userController.js';
 import {
     userSignInSchema,
     userSignUpSchema
@@ -13,6 +13,7 @@ const router = express.Router();
 router.post('/signup', validate(userSignUpSchema), signUp);
 router.post('/signin', validate(userSignInSchema), signIn);
 router.post('/validateuser',validateEmailAndUsernameContoller);
+router.post('/updatepassword',updatePasswordController);
 router.use('/otpverification',otpRouter);
 
 export default router;

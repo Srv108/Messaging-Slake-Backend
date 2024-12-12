@@ -42,6 +42,15 @@ userSchema.pre('save', function saveUser(next) {
     user.avatar = `https://api.multiavatar.com/${user.username}`;
     next();
 });
+
+userSchema.pre('findOneAndUpdate',function updatePassword(next){
+    const user = this.getUpdate();
+    const SALT = bcrypt.genSaltSync(9);
+    const hashedPassword = bcrypt.hashSync(user.password, SALT);
+    user.password = hashedPassword;
+
+    next();
+})
 userSchema.index({ username: 1 }, { unique: true }); // Enforce unique constraint explicitly
 const User = mongoose.model('User', userSchema);
 

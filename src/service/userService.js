@@ -130,8 +130,33 @@ export const validateEmailAndUsernameService = async(userDetails) => {
         }
         console.log(isValidEmail.email);
         await generateOtpForUserService(isValidEmail.email);
-        return isValidEmail;
+        return ({
+            email: isValidEmail.email,
+            username: isValidEmail.username,
+            avatar: isValidEmail.avatar,
+            createdAt: isValidEmail.createdAt,
+            updatedAt: isValidEmail.updatedAt
+        });
     } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
+
+export const updatePasswordService = async(updateObject) => {
+    try{
+        const isValidUser = await userRepository.getByEmail(updateObject.email);
+        if(!isValidUser){
+            throw new ClientError({
+                explanation: ['email sent by the client is invalid'],
+                message: 'email details are incorrect',
+                statusCode: StatusCodes.NOT_FOUND
+            })
+        }
+        const updatedUser = await userRepository.findByEmailAndUpdate(updateObject);
+        return updatedUser;
+    }catch(error){
         console.log(error);
         throw error;
     }

@@ -1,6 +1,6 @@
 import { StatusCodes } from 'http-status-codes';
 
-import { SignUpService, SingInService, validateEmailAndUsernameService } from '../service/userService.js';
+import { SignUpService, SingInService, updatePasswordService, validateEmailAndUsernameService } from '../service/userService.js';
 import {
     customErrorResponse,
     internalErrorResponse,
@@ -62,4 +62,26 @@ export const validateEmailAndUsernameContoller = async(req,res) => {
             .status(StatusCodes.INTERNAL_SERVER_ERROR)
             .json(internalErrorResponse(error));
     }
-}
+};
+
+export const updatePasswordController = async(req,res) => {
+    try{
+        // const user = req.user;
+        const response = await updatePasswordService(req.body);
+
+        console.log(response);
+        return res
+        .status(StatusCodes.OK)
+        .json(successResponse(response, 'Password updated Successfully'));
+
+    }catch(error){
+        if (error.statusCodes) {
+            return res
+                .status(error.statusCodes)
+                .json(customErrorResponse(error));
+        }
+        return res
+            .status(StatusCodes.INTERNAL_SERVER_ERROR)
+            .json(internalErrorResponse(error));
+    }
+};
