@@ -1,7 +1,7 @@
 import express from 'express';
 
 import { uploader } from '../../config/multerConfig.js';
-import { signIn, signUp, updatePasswordController, updateUserDetailsController, validateEmailAndUsernameContoller } from '../../controller/userController.js';
+import { signIn, signUp, updatePasswordController, updateUserDpController, updateUserProfileController, validateEmailAndUsernameContoller } from '../../controller/userController.js';
 import { isAuthenticated } from '../../middlewares/authMiddleware.js';
 import {
     otpVerificationSchema,
@@ -21,6 +21,7 @@ router.post('/signin', validate(userSignInSchema), signIn);
 router.post('/validateuser',validate(userVerificationSchema),validateEmailAndUsernameContoller);
 router.post('/updatepassword',validate(validatePasswordSchema),updatePasswordController);
 router.use('/otpverification',validate(otpVerificationSchema),otpRouter);
-router.put('/update/profile',isAuthenticated,validate(userDetailsSchema),uploader.single('avatar'),updateUserDetailsController);
+router.put('/update/dp',isAuthenticated, uploader.single('avatar'),updateUserDpController);
+router.put('/update/profile',isAuthenticated, validate(userDetailsSchema), updateUserProfileController);
 
 export default router;

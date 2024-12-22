@@ -28,5 +28,6 @@ export const validatePasswordSchema = z.object({
 })
 export const userDetailsSchema = z.object({
     username: z.string().min(3).optional(),
-    email: z.string().email().optional(),
+    name: z.string().min(1).optional(),
+    about: z.string().optional(),
 })

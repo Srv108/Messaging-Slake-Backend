@@ -164,7 +164,7 @@ export const updatePasswordService = async(updateObject) => {
     }
 }
 
-export const UpdateUserDetailsService = async(userDetails,userId) => {
+export const UpdateUserDpService = async(userProfileDetails,userId) => {
     try{
         const isValidUser = await userRepository.getById(userId);
         if(!isValidUser) {
@@ -176,11 +176,29 @@ export const UpdateUserDetailsService = async(userDetails,userId) => {
         }
         const fileKey = isValidUser?.awsKey;
         if(fileKey) await deleter(fileKey);
-        
-        const response = await userRepository.update(userId,{...userDetails,skipPasswordHashing: true});
+
+        const response = await userRepository.update(userId,{...userProfileDetails,skipPasswordHashing: true});
         return response;
     }catch(error){
         console.log('Error in updating user details',error);
+        throw error;
+    }
+}
+
+export const updateUserProfileService = async (userDetails,userId) => {
+    try {
+        const isValidUser = await userRepository.getById(userId);
+        if(!isValidUser) {
+            throw new ClientError({
+                explanation: ['User id sent by the client is invalid'],
+                message: 'You are not authorised to update',
+                statusCode: StatusCodes.NOT_FOUND
+            })
+        }
+        const response = await userRepository.update(userId,{...userDetails,skipPasswordHashing: true});
+        return response;
+    } catch (error) {
+        console.log('error in update user details service',error);
         throw error;
     }
 }

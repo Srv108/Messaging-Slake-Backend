@@ -19,12 +19,19 @@ const userSchema = new mongoose.Schema(
             type: String,
             required: [true, 'password is required']
         },
+        name: {
+            type: String,
+            required: [true, 'Name is required'], 
+        },
         username: {
             type: String,
             unique: true,
             required: [true, 'Username is required'],
             trim: true,
             match: [/^[a-zA-Z0-9-_.]+$/, 'Invalid Username']
+        },
+        about: {
+            type: String,
         },
         avatar: {
             type: String
