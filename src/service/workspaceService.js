@@ -16,7 +16,7 @@ export const createWorkspaceService = async (workspaceData) => {
 
         const response = await workspaceRepository.create({
             name: workspaceData.name,
-            // description: workspaceData.description,
+            description: workspaceData.description,
             joinCode
         });
 
@@ -116,7 +116,7 @@ export const isUserAdminOfWorkspace = async (userId, workspace) => {
 
 export const isUserMemberOfWorkspace = async (userId, workspace) => {
     const response = await workspace.members.find(
-        (member) => member.memberId.toString() === userId
+        (member) => member.memberId._id.toString() === userId
     );
     return response || false;
 };
@@ -331,10 +331,10 @@ export const addChannelToWorkspaceService = async (
     }
 };
 
-export const getWorkspaceService = async (workspaceId, memberId) => {
+export const getWorkspaceByIdService = async (workspaceId, memberId) => {
     // eslint-disable-next-line no-useless-catch
     try {
-        const workspace = await workspaceRepository.getById(workspaceId);
+        const workspace = await workspaceRepository.getWorkspaceDetailsById(workspaceId);
         if (!workspace) {
             throw new ClientError({
                 explanation: ['Invalid workspace id sent by client'],
@@ -343,6 +343,8 @@ export const getWorkspaceService = async (workspaceId, memberId) => {
             });
         }
 
+        console.log('Hey i am here ',workspace);
+        console.log(memberId);
         const isMember = await isUserMemberOfWorkspace(memberId, workspace);
         if (!isMember) {
             throw new ClientError({

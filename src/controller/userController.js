@@ -1,6 +1,6 @@
 import { StatusCodes } from 'http-status-codes';
 
-import { SignUpService, SingInService, updatePasswordService, validateEmailAndUsernameService } from '../service/userService.js';
+import { SignUpService, SingInService, updatePasswordService, UpdateUserDetailsService, validateEmailAndUsernameService } from '../service/userService.js';
 import {
     customErrorResponse,
     internalErrorResponse,
@@ -85,3 +85,27 @@ export const updatePasswordController = async(req,res) => {
             .json(internalErrorResponse(error));
     }
 };
+
+export const updateUserDetailsController = async(req,res) => {
+    try {
+
+        const userDetails = {
+            avatar: req.file.location,
+            awsKey: req.file.key,
+        }
+        const response = await UpdateUserDetailsService(userDetails,req.user);
+
+        return res
+        .status(StatusCodes.OK)
+        .json(successResponse(response, 'Profile updated Successfully'));
+    } catch (error) {
+        if (error.statusCodes) {
+            return res
+                .status(error.statusCodes)
+                .json(customErrorResponse(error));
+        }
+        return res
+            .status(StatusCodes.INTERNAL_SERVER_ERROR)
+            .json(internalErrorResponse(error));
+    }
+}

@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import { StatusCodes } from 'http-status-codes';
 
+import { deleter } from '../config/multerConfig.js';
 import userRepository from '../repository/userRepository.js';
 import ClientError from '../utils/Errors/clientError.js';
 import ValidationError from '../utils/Errors/validationError.js';
@@ -16,7 +17,7 @@ export const SignUpService = async (data) => {
         if (error.name === 'ValidationError') {
             throw new ValidationError(
                 {
-                    error: error.errors
+                    error: error.errors,
                 },
                 error.message
             );
@@ -72,7 +73,8 @@ export const SingInService = async (userDetails) => {
             username: user.username,
             avatar: user.avatar,
             email: user.email,
-            token: token
+            token: token,
+            id: user._id
         };
     } catch (error) {
         console.log(error);
@@ -154,10 +156,31 @@ export const updatePasswordService = async(updateObject) => {
                 statusCode: StatusCodes.NOT_FOUND
             })
         }
-        const updatedUser = await userRepository.findByEmailAndUpdate(updateObject);
+        const updatedUser = await userRepository.findByEmailAndUpdate({updateObject});
         return updatedUser;
     }catch(error){
         console.log(error);
+        throw error;
+    }
+}
+
+export const UpdateUserDetailsService = async(userDetails,userId) => {
+    try{
+        const isValidUser = await userRepository.getById(userId);
+        if(!isValidUser) {
+            throw new ClientError({
+                explanation: ['User id sent by the client is invalid'],
+                message: 'You are not authorised to update',
+                statusCode: StatusCodes.NOT_FOUND
+            })
+        }
+        const fileKey = isValidUser?.awsKey;
+        if(fileKey) await deleter(fileKey);
+        
+        const response = await userRepository.update(userId,{...userDetails,skipPasswordHashing: true});
+        return response;
+    }catch(error){
+        console.log('Error in updating user details',error);
         throw error;
     }
 }

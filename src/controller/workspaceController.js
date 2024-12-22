@@ -6,8 +6,8 @@ import {
     createWorkspaceService,
     deleteWorkspaceService,
     getAllWorkspaceOfUserIsMemberService,
+    getWorkspaceByIdService,
     getWorkspaceByJoinCodeService,
-    getWorkspaceService,
     updatedWorkspaceService
 } from '../service/workspaceService.js';
 import {
@@ -169,9 +169,9 @@ export const getWorkspaceByJoinCodeController = async (req, res) => {
     }
 };
 
-export const getWorkspaceByMemberController = async (req, res) => {
+export const getWorkspaceByIdController = async (req, res) => {
     try {
-        const response = await getWorkspaceService(
+        const response = await getWorkspaceByIdService(
             req.params.workspaceId,
             req.user
         );

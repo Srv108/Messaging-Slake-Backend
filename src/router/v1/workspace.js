@@ -6,8 +6,8 @@ import {
     createWorkspaceController,
     deleteWorkspaceController,
     getAllWorkspceOfUserIsMemberController,
+    getWorkspaceByIdController,
     getWorkspaceByJoinCodeController,
-    getWorkspaceByMemberController,
     updatedWorkspaceController
 } from '../../controller/workspaceController.js';
 import { isAuthenticated } from '../../middlewares/authMiddleware.js';
@@ -38,9 +38,9 @@ router.put(
 
 router.get('/joincode', isAuthenticated, getWorkspaceByJoinCodeController);
 router.get(
-    '/:workspaceId/member',
+    '/:workspaceId',
     isAuthenticated,
-    getWorkspaceByMemberController
+    getWorkspaceByIdController
 );
 router.put('/:workspaceId/update', isAuthenticated, updatedWorkspaceController);
 export default router;

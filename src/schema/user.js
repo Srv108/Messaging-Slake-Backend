@@ -28,6 +28,9 @@ const userSchema = new mongoose.Schema(
         },
         avatar: {
             type: String
+        },
+        awsKey: {
+            type: String,
         }
     },
     { timestamps: true }
@@ -45,10 +48,11 @@ userSchema.pre('save', function saveUser(next) {
 
 userSchema.pre('findOneAndUpdate',function updatePassword(next){
     const user = this.getUpdate();
-    const SALT = bcrypt.genSaltSync(9);
-    const hashedPassword = bcrypt.hashSync(user.password, SALT);
-    user.password = hashedPassword;
-
+    if(user.password && !user.skipPasswordHashing){
+        const SALT = bcrypt.genSaltSync(9);
+        const hashedPassword = bcrypt.hashSync(user?.password, SALT);
+        user.password = hashedPassword;
+    }
     next();
 })
 userSchema.index({ username: 1 }, { unique: true }); // Enforce unique constraint explicitly
