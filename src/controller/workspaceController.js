@@ -8,7 +8,8 @@ import {
     getAllWorkspaceOfUserIsMemberService,
     getWorkspaceByIdService,
     getWorkspaceByJoinCodeService,
-    updatedWorkspaceService
+    updatedWorkspaceService,
+    updateWorkspaceJoincodeService
 } from '../service/workspaceService.js';
 import {
     customErrorResponse,
@@ -222,3 +223,26 @@ export const updatedWorkspaceController = async (req, res) => {
             .json(internalErrorResponse(error));
     }
 };
+
+export const updateWorkspaceJoincodeController = async(req,res) => {
+    try{
+
+        const response = await updateWorkspaceJoincodeService(req.params.workspaceId,req.user);
+        return res
+            .status(StatusCodes.OK)
+            .json(successResponse(response, 'Workspace Updated Successfully'));
+    }catch(error){
+        console.log(
+            'Controller layer update Workspace joincode error ',
+            error
+        );
+        if (error.statusCodes) {
+            return res
+                .status(error.statusCodes)
+                .json(customErrorResponse(error));
+        }
+        return res
+            .status(StatusCodes.INTERNAL_SERVER_ERROR)
+            .json(internalErrorResponse(error));
+    }
+}

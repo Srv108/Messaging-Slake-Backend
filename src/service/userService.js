@@ -178,6 +178,7 @@ export const UpdateUserDpService = async(userProfileDetails,userId) => {
         if(fileKey) await deleter(fileKey);
 
         const response = await userRepository.update(userId,{...userProfileDetails,skipPasswordHashing: true});
+        console.log(response);
         return response;
     }catch(error){
         console.log('Error in updating user details',error);
