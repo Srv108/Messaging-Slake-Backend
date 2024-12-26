@@ -22,6 +22,7 @@ export const isAuthenticated = async (req, res, next) => {
 
         const response = await verifyToken(token, JWT_SECRET_KEY);
 
+        console.log('Jwt token part',response);
         if (!response) {
             throw res.status(StatusCodes.BAD_REQUEST).json(
                 customErrorResponse({
@@ -36,8 +37,8 @@ export const isAuthenticated = async (req, res, next) => {
         console.log('user details is ', user);
         next();
     } catch (error) {
-        console.log('Auth middleware error', error);
-        if (error.name === 'JsonWebTokenError') {
+        console.log('Auth middleware error saurav', error);
+        if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
             return res.status(StatusCodes.FORBIDDEN).json(
                 customErrorResponse({
                     explanation: 'Invalid data sent from the client',
