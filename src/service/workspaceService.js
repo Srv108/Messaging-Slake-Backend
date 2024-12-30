@@ -354,7 +354,6 @@ export const getWorkspaceByIdService = async (workspaceId, memberId) => {
             });
         }
 
-        console.log('Hey i am here ',workspace);
         console.log(memberId);
         const isMember = await isUserMemberOfWorkspace(memberId, workspace);
         if (!isMember) {
@@ -373,6 +372,7 @@ export const getWorkspaceByIdService = async (workspaceId, memberId) => {
 
 export const joinWorkspaceService = async(workspaceId,joinCode,userId) => {
     try {
+        // const workspace = await getWorkspaceByJoinCodeService(joinCode,userId)
         const workspace = await workspaceRepository.getWorkspaceDetailsById(workspaceId);
 
         if(!workspace){
@@ -396,6 +396,31 @@ export const joinWorkspaceService = async(workspaceId,joinCode,userId) => {
         return response;
     } catch (error) {
         console.log('Error in join workspace service',error);
+        throw error;
+    }
+}
+
+export const addMemberTOWorkspaceByUsernameService = async(workspaceId, username, adminId) => {
+    try {
+        const user = await userRepository.getByUsername(username);
+        if (!user) {
+            throw new ClientError({
+                explanation: ['User does not exist'],
+                message: 'User not exists',
+                statusCodes: StatusCodes.NOT_FOUND
+            });
+        }
+
+        const response = await addMemberToWorkspaceService(
+            workspaceId,
+            user._id,
+            'member',
+            adminId
+        )
+
+        return response;
+    } catch (error) {
+        console.log('Error coming from add member to workspace service by username',error);
         throw error;
     }
 }

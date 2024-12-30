@@ -46,7 +46,7 @@ const workspaceRepository = {
     },
     addMemberToWorkspace: async function (workspaceId, memberId, role) {
         const workspace = await WorkSpace.findById(workspaceId);
-
+        console.log(workspaceId,memberId);
         if (!workspace) {
             throw new ClientError({
                 explanation: 'invalid data sent by the client side',

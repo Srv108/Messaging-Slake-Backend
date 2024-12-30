@@ -5,7 +5,6 @@ const workspaceSchema = new mongoose.Schema(
         name: {
             type: String,
             required: [true, 'WorkSpace name is required'],
-            unique: true
         },
         members: [
             {
