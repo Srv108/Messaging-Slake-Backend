@@ -287,7 +287,6 @@ export const addMemberTOWorkspaceByUsernameController = async(req,res) => {
             req.user
         );
 
-        console.log('Response coming from adding member to workspace by username ',response);
         return res
             .status(StatusCodes.OK)
             .json(successResponse(response, 'Workspace joined Successfully'));

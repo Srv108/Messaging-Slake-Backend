@@ -15,7 +15,11 @@ import { isAuthenticated } from './middlewares/authMiddleware.js';
 
 const app = express();
 const server = createServer(app);
-const io = new Server(server);
+const io = new Server(server, {
+    cors: {
+        origin: '*'
+    }
+});
 
 app.use(cors())
 app.use(express.json());
