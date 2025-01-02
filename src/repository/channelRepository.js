@@ -4,11 +4,11 @@ import crudRepository from './crudRepository.js';
 const channelRepository = {
     ...crudRepository(Channel),
     getChannelByName: async function (channelName) {
-        const response = Channel.findOne({ name: channelName });
+        const response = await Channel.findOne({ name: channelName });
         return response;
     },
     getChannelWithWorkspace: async function (channelId) {
-        const response = Channel.findById(channelId).populate('workspaceId');
+        const response = await Channel.findById(channelId).populate('workspaceId');
         return response;
     }
 };

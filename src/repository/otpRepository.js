@@ -4,7 +4,7 @@ import crudRepository from "./crudRepository.js";
 const otpRepository = {
     ...crudRepository(OTP),
     getOtpByEmail: async function(email){
-        const otpDetails = OTP.findOne({email: email});
+        const otpDetails = await OTP.findOne({email: email});
         return otpDetails;
     }
 }

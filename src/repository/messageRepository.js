@@ -4,20 +4,28 @@ import crudRepository from './crudRepository.js';
 const MessageRepository = {
     ...crudRepository(Message),
     getPaginatedMessage: async function (messageParams, page, limit) {
-        const messages = Message.find(messageParams)
-            .sort({ createdAt: -1 })
+        const messages = await Message.find(messageParams)
+            .sort({ createdAt: 1 })
             .skip((page - 1) * limit)
             .limit(limit)
-            .populate('senderId', 'username email ');
+            .populate('senderId', 'username email avatar');
 
         return messages;
     },
     getMessage: async function (messageParams) {
-        const messages = Message.find(messageParams)
+        const messages = await Message.find(messageParams)
             .sort({ createdAt: -1 })
-            .populate('senderId', 'username email ');
+            .populate('senderId', 'username email avatar');
 
         return messages;
+    },
+    getMessageDetails: async function (id) {
+        const message = await Message.findById(id).populate(
+            'senderId', 
+            'username email avatar'
+        );
+
+        return message;
     }
 };
 
