@@ -9,6 +9,11 @@ const messageSchema = new mongoose.Schema(
         image: {
             type: String
         },
+        status: { 
+            type: String, 
+            enum: ['read', 'unread'], 
+            default: 'unread' 
+        },
         channelId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Channel',

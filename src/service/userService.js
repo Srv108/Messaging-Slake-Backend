@@ -6,11 +6,14 @@ import userRepository from '../repository/userRepository.js';
 import ClientError from '../utils/Errors/clientError.js';
 import ValidationError from '../utils/Errors/validationError.js';
 import { generateToken } from '../utils/jwt/jwtUtils.js';
+import { createDMsService } from './directMessageService.js';
 import { generateOtpForUserService } from './otpService.js';
 
 export const SignUpService = async (data) => {
     try {
-        const newUser = userRepository.create(data);
+        const newUser = await userRepository.create(data);
+        await createDMsService(newUser._id);
+        
         return newUser;
     } catch (error) {
         console.log('User Service Error', error);
