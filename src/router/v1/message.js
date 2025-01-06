@@ -5,7 +5,7 @@ import { isAuthenticated } from '../../middlewares/authMiddleware.js';
 
 const router = express.Router();
 
-router.get('/:channelId', isAuthenticated, getMessageController);
 router.get('/pre-signed-url',isAuthenticated,getPresignedUrlFromAws);
+router.get('/:channelId', isAuthenticated, getMessageController);
 
 export default router;

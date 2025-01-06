@@ -41,12 +41,13 @@ export const getMessageController = async (req, res) => {
 
 export const getPresignedUrlFromAws = async(req,res) => {
     try {
-        const url = await s3.getPresignedUrlPromise('putObject',{
+        const url = await s3.getSignedUrlPromise('putObject',{
             Bucket: AWS_BUCKET_NAME,
-            Key: `${req.user}-${Date.now()}`,
-            Expires: 60,
-
+            Key: `${req.query.fileName}-${Date.now()}`,
+            Expires: 120,
+            ContentType: req.query.contentType 
         })
+
 
         return res.status(StatusCodes.OK).json(
             successResponse({
@@ -55,7 +56,7 @@ export const getPresignedUrlFromAws = async(req,res) => {
             })
         );
     } catch (error) {
-        console.log('Controller layer error ', error);
+        console.log('Controller layer error  in getting url ', error);
         if (error.statusCodes) {
             return res
                 .status(error.statusCodes)
