@@ -213,6 +213,7 @@ export const updateWorkspaceJoincodeService = async(workspaceId,userId) => {
         throw error;
     }
 }
+
 export const addMemberToWorkspaceService = async (
     workspaceId,
     memberId,
