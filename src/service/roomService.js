@@ -94,7 +94,7 @@ export const getRoomBySenderIdAndRecieverIdService = async(senderId,recieverId) 
     }
 }
 
-export const updateRoomStatusService = async(roomId,data) => {
+export const updateRoomStatusService = async(roomId,data,userId) => {
     try {
         
         const room = await roomRepository.getById(roomId);
@@ -105,7 +105,16 @@ export const updateRoomStatusService = async(roomId,data) => {
                 statusCodes: StatusCodes.NOT_FOUND
             });
         }
+        console.log()
+        const isUserAuthenticated = (room.senderId.toString() === userId || room.recieverId.toString() === userId);
 
+        if(!isUserAuthenticated){
+            throw new ClientError({
+                explanation: ['user is not authenticated to do this action'],
+                message: 'invalid user id',
+                statusCodes: StatusCodes.UNAUTHORIZED
+            });
+        }
         const response = await roomRepository.update(roomId,data);
 
         return response;

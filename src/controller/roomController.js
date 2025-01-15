@@ -78,7 +78,7 @@ export const updateRoomStatusController = async(req,res) => {
     try {
         
         const roomData = req.body;
-        const response = await updateRoomStatusService(req.params.roomId,roomData);
+        const response = await updateRoomStatusService(req.params.roomId,roomData,req.user);
 
         return res.status(StatusCodes.OK).json({
             success: true,
