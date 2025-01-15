@@ -1,17 +1,35 @@
 import { StatusCodes } from "http-status-codes";
+import mongoose from "mongoose";
 
 import roomRepository from "../repository/roomRepository.js";
+import userRepository from "../repository/userRepository.js";
 import ClientError from "../utils/Errors/clientError.js";
 import ValidationError from "../utils/Errors/validationError.js";
 
 export const createRoomService = async (senderId,recieverId) => {
     try {
-        console.log('Senderid and reciever id is ',senderId,recieverId);
+        const isValidObjectId = mongoose.Types.ObjectId.isValid(recieverId);
+        if(!isValidObjectId){
+            throw new ClientError({
+                message: 'Invalid Reciever id',
+                explanation: ['Reciever id sent by you is invalid'],
+                statusCodes: StatusCodes.FORBIDDEN
+            });
+        }
+
+        const isValidUser = await userRepository.getById(recieverId);
+        if(!isValidUser){
+            throw new ClientError({
+                message: 'Invalid Reciever id',
+                explanation: ['Reciever id sent by you is invalid'],
+                statusCodes: StatusCodes.NOT_FOUND
+            });
+        }
         const room = await roomRepository.create({ senderId, recieverId });
 
         const roomDetails = await roomRepository.getRoomDetails(room._id);
         return roomDetails;
-        
+
     } catch (error) {
         console.log('Error in creating room Service ', error);
         if (error.name === 'ValidationError') {
@@ -49,6 +67,24 @@ export const getAllRoomByUserIdService = async(userId) => {
 
 export const getRoomBySenderIdAndRecieverIdService = async(senderId,recieverId) => {
     try {
+
+        const isValidObjectId = mongoose.Types.ObjectId.isValid(recieverId);
+        if(!isValidObjectId){
+            throw new ClientError({
+                message: 'Invalid Reciever id',
+                explanation: ['Reciever id sent by you is invalid'],
+                statusCodes: StatusCodes.NOT_FOUND
+            });
+        }
+
+        const isValidUser = await userRepository.getById(recieverId);
+        if(!isValidUser){
+            throw new ClientError({
+                message: 'Invalid Reciever id',
+                explanation: ['Reciever id sent by you is invalid'],
+                statusCodes: StatusCodes.NOT_FOUND
+            });
+        }
         const room = await roomRepository.getRoomBySenderAndReciverId(senderId,recieverId);
 
         return room;

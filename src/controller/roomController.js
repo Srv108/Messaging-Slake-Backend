@@ -77,11 +77,12 @@ export const getRoomBySenderIdAndRecieverIdController = async(req,res) => {
 export const updateRoomStatusController = async(req,res) => {
     try {
         
-        const response = await updateRoomStatusService(req.body.roomId,req.body.data);
+        const roomData = req.body;
+        const response = await updateRoomStatusService(req.params.roomId,roomData);
 
         return res.status(StatusCodes.OK).json({
             success: true,
-            messgae: 'room fetched successfully',
+            messgae: 'room updated successfully',
             data: response
         });
     } catch (error) {

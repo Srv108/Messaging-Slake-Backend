@@ -16,7 +16,8 @@ const roomRepository = {
                 {senderId: senderId},
                 {recieverId: recieverId}
             ]
-        });
+        }).populate('senderId','username email avatar _id')
+        .populate('recieverId','username email avatar _id');
 
         return room;
     },
