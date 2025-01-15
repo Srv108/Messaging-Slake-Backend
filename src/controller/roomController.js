@@ -1,6 +1,6 @@
 import { StatusCodes } from "http-status-codes";
 
-import { createRoomService, getAllRoomByUserIdService, getRoomBySenderIdAndRecieverIdService, updateRoomStatusService } from "../service/roomService.js";
+import { createRoomService, deleteRoomService, getAllRoomByUserIdService, getRoomBySenderIdAndRecieverIdService, updateRoomStatusService } from "../service/roomService.js";
 import { customErrorResponse, internalErrorResponse } from "../utils/common/responseObject.js";
 
 export const createRoomController = async (req,res) => {
@@ -35,7 +35,7 @@ export const getAllRoomByUserIdController = async(req,res) => {
 
         return res.status(StatusCodes.OK).json({
             success: true,
-            messgae: 'all rooms fetched successfully',
+            messgae: `${(response.length === 0) ? 'no any rooms belongs to you' : 'all rooms fetched successfully'}`,
             data: response
         });
     } catch (error) {
@@ -87,6 +87,29 @@ export const updateRoomStatusController = async(req,res) => {
         });
     } catch (error) {
         console.log('Error coming in updating room controller',error);
+        if (error.statusCodes) {
+            return res
+                .status(error.statusCodes)
+                .json(customErrorResponse(error));
+        }
+        return res
+            .status(StatusCodes.INTERNAL_SERVER_ERROR)
+            .json(internalErrorResponse(error));
+    }
+}
+
+export const deleteRoomController = async (req,res) => {
+    try {
+        
+        const response = await deleteRoomService(req.params.id,req.user);
+
+        return res.status(StatusCodes.OK).json({
+            success: true,
+            messgae: 'room deleted successfully',
+            data: response
+        });
+    } catch (error) {
+        console.log('Error coming in deleting room controller',error);
         if (error.statusCodes) {
             return res
                 .status(error.statusCodes)

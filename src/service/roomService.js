@@ -105,7 +105,6 @@ export const updateRoomStatusService = async(roomId,data,userId) => {
                 statusCodes: StatusCodes.NOT_FOUND
             });
         }
-        console.log()
         const isUserAuthenticated = (room.senderId.toString() === userId || room.recieverId.toString() === userId);
 
         if(!isUserAuthenticated){
