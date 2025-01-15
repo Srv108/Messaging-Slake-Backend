@@ -10,7 +10,9 @@ import bullServerAdapter from './config/bullboardConfig.js';
 import { connectDB } from './config/dbConfig.js';
 import { PORT } from './config/serverConfig.js';
 import channelSocketHandler from './controller/channelSocketController.js';
+import message2SocketHandler from './controller/message2SocketController.js'
 import messageSocketHandler from './controller/messageSocketController.js';
+import roomSocketHandler from './controller/roomSocketController.js'
 import { isAuthenticated } from './middlewares/authMiddleware.js';
 
 const app = express();
@@ -44,6 +46,8 @@ io.on('connection', (socket) => {
     //     io.emit('message',data);
     // });
 
+    message2SocketHandler(io,socket);
+    roomSocketHandler(io,socket);
     messageSocketHandler(io,socket);
     channelSocketHandler(io,socket);
 });
