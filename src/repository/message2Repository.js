@@ -2,7 +2,7 @@ import Message2 from "../schema/message2.js";
 import crudRepository from "./crudRepository.js";
 
 const message2Repository = {
-    ...crudRepository,
+    ...crudRepository(Message2),
     getAllMessageByRoomId: async function(roomId){
         const messages = await Message2.find(roomId)
             .sort({createdAt: -1})

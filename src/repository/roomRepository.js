@@ -1,8 +1,8 @@
 import Room from "../schema/room.js";
-import crudRepository from "./crudRepositor.js";
+import crudRepository from "./crudRepository.js";
 
 const roomRepository = {
-    ...crudRepository,
+    ...crudRepository(Room),
     getAllRoomsByUserId: async function(userId){
         const rooms = await Room.find({$or: [
             {senderId: userId},
@@ -20,8 +20,13 @@ const roomRepository = {
 
         return room;
     },
+    getRoomDetails: async function(roomId){
+        const room = await Room.findById(roomId)
+            .populate('senderId','username email avatar _id')
+            .populate('recieverId','username email avatar _id');
 
-
+        return room;
+    }
 }
 
 export default roomRepository;

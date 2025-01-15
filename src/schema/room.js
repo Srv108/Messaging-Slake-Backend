@@ -25,7 +25,7 @@ const roomSchema = new mongoose.Schema(
 
 roomSchema.index({ senderId: 1, recieverId: 1},{ unique: true});
 
-roomSchema.pre('save',(next) => {
+roomSchema.pre('save',function (next){
     if(this.senderId > this.recieverId){
         const temp = this.senderId;
         this.senderId = this.recieverId;

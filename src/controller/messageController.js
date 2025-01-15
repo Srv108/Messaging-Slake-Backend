@@ -2,6 +2,7 @@ import { StatusCodes } from 'http-status-codes';
 
 import { s3 } from '../config/awsConfig.js';
 import { AWS_BUCKET_NAME } from '../config/serverConfig.js';
+import { getAllMessageByRoomIdService } from '../service/message2Service.js';
 import { getMessageService } from '../service/messageService.js';
 import {
     customErrorResponse,
@@ -57,6 +58,30 @@ export const getPresignedUrlFromAws = async(req,res) => {
         );
     } catch (error) {
         console.log('Controller layer error  in getting url ', error);
+        if (error.statusCodes) {
+            return res
+                .status(error.statusCodes)
+                .json(customErrorResponse(error));
+        }
+        return res
+            .status(StatusCodes.INTERNAL_SERVER_ERROR)
+            .json(internalErrorResponse(error));
+    }
+}
+
+export const getMessageForRoomController = async(req,res) => {
+    try {
+        
+        const response = await getAllMessageByRoomIdService(req.body.roomId,req.user);
+
+        return res.status(StatusCodes.OK).json(
+            successResponse({
+                data: response,
+                messgae: 'Message fetched successfully'
+            })
+        );
+    } catch (error) {
+        console.log('Controller layer error  in getting message for rooms ', error);
         if (error.statusCodes) {
             return res
                 .status(error.statusCodes)

@@ -2,7 +2,6 @@ import { StatusCodes } from "http-status-codes";
 
 import message2Repository from "../repository/message2Repository.js";
 import roomRepository from "../repository/roomRepository.js";
-import userRepository from "../repository/userRepository.js";
 import ClientError from "../utils/Errors/clientError.js";
 import { createRoomService } from "./roomService.js";
 
@@ -26,15 +25,6 @@ export const createMessageService = async(data) => {
 
 export const getAllMessageByRoomIdService = async(roomId,userId) => {
     try {
-
-        const isValidUser = await userRepository.getById(userId);
-        if(!isValidUser){
-            throw new ClientError({
-                explanation: ['Invalid user id sent by client'],
-                message: 'user not found',
-                statusCodes: StatusCodes.NOT_FOUND
-            });
-        }
 
         const room = await roomRepository.getById(roomId);
         if(!room){

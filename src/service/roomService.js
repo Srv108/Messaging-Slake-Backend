@@ -6,11 +6,12 @@ import ValidationError from "../utils/Errors/validationError.js";
 
 export const createRoomService = async (senderId,recieverId) => {
     try {
-        
+        console.log('Senderid and reciever id is ',senderId,recieverId);
         const room = await roomRepository.create({ senderId, recieverId });
 
-        return room;
-
+        const roomDetails = await roomRepository.getRoomDetails(room._id);
+        return roomDetails;
+        
     } catch (error) {
         console.log('Error in creating room Service ', error);
         if (error.name === 'ValidationError') {
@@ -24,9 +25,9 @@ export const createRoomService = async (senderId,recieverId) => {
         if (error.name === 'MongoServerError' && error.code === 11000) {
             throw new ValidationError(
                 {
-                    error: ['Workspace with same details already exists']
+                    error: ['Room with same details already exists']
                 },
-                'Workspace with same details already exists'
+                'Room with same details already exists'
             );
         }
         throw error;
