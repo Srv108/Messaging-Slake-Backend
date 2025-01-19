@@ -150,3 +150,31 @@ export const deleteRoomService = async(roomId,userId) => {
         throw error;
     }
 }
+
+export const getRoomByIdService = async(roomId,userId) => {
+    try {
+        
+        const room = await roomRepository.getById(roomId);
+        if(!room){
+            throw new ClientError({
+                explanation: ['room id sent by the client is invalid'],
+                message: 'Invalid room id',
+                statusCodes: StatusCodes.NOT_FOUND
+            });
+        }
+
+        const isUserPartOfRoom = (room.senderId.toString() === userId || room.recieverId.toString() === userId)
+        if(!isUserPartOfRoom){
+            throw new ClientError({
+                explanation: ['user id sent by the client is invalid'],
+                message: 'user is unauthorised to do this action',
+                statusCodes: StatusCodes.UNAUTHORIZED
+            });
+        }
+
+        return room;
+    } catch (error) {
+        console.log('error coming in getting room by id');
+        throw error;
+    }
+}
