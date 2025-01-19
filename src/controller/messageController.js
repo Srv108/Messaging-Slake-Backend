@@ -71,8 +71,8 @@ export const getPresignedUrlFromAws = async(req,res) => {
 
 export const getMessageForRoomController = async(req,res) => {
     try {
-        
-        const response = await getAllMessageByRoomIdService(req.body.roomId,req.user);
+        console.log('room id is ',req.params.roomId)
+        const response = await getAllMessageByRoomIdService(req.params.roomId,req.user);
 
         return res.status(StatusCodes.OK).json(
             successResponse({

@@ -172,7 +172,8 @@ export const getRoomByIdService = async(roomId,userId) => {
             });
         }
 
-        return room;
+        const roomDetails = await roomRepository.getRoomDetails(roomId)
+        return roomDetails;
     } catch (error) {
         console.log('error coming in getting room by id');
         throw error;

@@ -44,7 +44,7 @@ export const getAllMessageByRoomIdService = async(roomId,userId) => {
                 statusCodes: StatusCodes.UNAUTHORIZED
             });
         }
-        const messages = await message2Repository.getAllMessageByRoomId(roomId);
+        const messages = await message2Repository.getAllMessageByRoomId({roomId});
 
         return messages;
     } catch (error) {
