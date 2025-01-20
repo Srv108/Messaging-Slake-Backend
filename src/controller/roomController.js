@@ -1,5 +1,6 @@
 import { StatusCodes } from "http-status-codes";
 
+import userRepository from "../repository/userRepository.js";
 import { createRoomService, deleteRoomService, getAllRoomByUserIdService, getRoomByIdService, getRoomBySenderIdAndRecieverIdService, updateRoomStatusService } from "../service/roomService.js";
 import { customErrorResponse, internalErrorResponse } from "../utils/common/responseObject.js";
 
@@ -7,7 +8,20 @@ export const createRoomController = async (req,res) => {
     try {
         
         const senderId = req.user.toString();
-        const recieverId = req.body.recieverId;
+        let recieverId = req.body?.recieverId || req.body?.username;
+
+        if(req?.body?.username){
+            const reciever = await userRepository.getByUsername(req.body.username);
+            if(!reciever){
+                return res.status(StatusCodes.NOT_FOUND).json({
+                    success: false,
+                    message: 'User not found',
+                    data: reciever
+                })
+            }
+            recieverId = reciever._id;
+        }
+
         const response = await createRoomService(senderId,recieverId);
 
         return res.status(StatusCodes.OK).json({

@@ -154,7 +154,8 @@ export const deleteRoomService = async(roomId,userId) => {
 export const getRoomByIdService = async(roomId,userId) => {
     try {
         
-        const room = await roomRepository.getById(roomId);
+        const room = await roomRepository.getRoomDetails(roomId)
+        console.log(room);
         if(!room){
             throw new ClientError({
                 explanation: ['room id sent by the client is invalid'],
@@ -163,7 +164,7 @@ export const getRoomByIdService = async(roomId,userId) => {
             });
         }
 
-        const isUserPartOfRoom = (room.senderId.toString() === userId || room.recieverId.toString() === userId)
+        const isUserPartOfRoom = (room.senderId._id.toString() === userId || room.recieverId._id.toString() === userId)
         if(!isUserPartOfRoom){
             throw new ClientError({
                 explanation: ['user id sent by the client is invalid'],
@@ -172,8 +173,7 @@ export const getRoomByIdService = async(roomId,userId) => {
             });
         }
 
-        const roomDetails = await roomRepository.getRoomDetails(roomId)
-        return roomDetails;
+        return room;
     } catch (error) {
         console.log('error coming in getting room by id');
         throw error;

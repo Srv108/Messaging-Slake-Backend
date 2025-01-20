@@ -7,7 +7,9 @@ const roomRepository = {
         const rooms = await Room.find({$or: [
             {senderId: userId},
             {recieverId: userId},
-        ]});
+        ]}).populate('senderId', 'username email avatar _id')
+        .populate('recieverId', 'username email avatar _id');
+
         return rooms;
     },
     getRoomBySenderAndReciverId: async function(senderId,recieverId) {
