@@ -9,7 +9,6 @@ export const getChannelByIdService = async (channelId, userId) => {
     try {
         const channel =
             await channelRepository.getChannelWithWorkspace(channelId);
-        console.log('channel details is ', channel);
 
         const isValidUser = await isUserMemberOfWorkspace(
             userId,

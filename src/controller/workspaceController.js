@@ -26,7 +26,6 @@ export const createWorkspaceController = async (req, res) => {
             owner: req.user
         });
 
-        console.log('WorkSpace details is ', response);
         return res.status(StatusCodes.OK).json({
             success: true,
             messgae: 'Workspace created successfully',
@@ -174,7 +173,6 @@ export const getWorkspaceByJoinCodeController = async (req, res) => {
 
 export const getWorkspaceByIdController = async (req, res) => {
     try {
-        console.log('Workspace id ogdff',req.params.workspaceId);
         const response = await getWorkspaceByIdService(
             req.params.workspaceId,
             req.user

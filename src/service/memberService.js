@@ -10,7 +10,6 @@ export const isUserMemberOfWorkspaceService = async (userId, workspaceId) => {
     try {
         const workspace = await workspaceRepository.getById(workspaceId);
         if (!workspace) {
-            console.log('workspace not found');
             throw new ClientError({
                 explanation: ['Invalid workspace id sent by client'],
                 message: 'workspace not found',

@@ -11,7 +11,6 @@ import ValidationError from '../utils/Errors/validationError.js';
 
 export const createWorkspaceService = async (workspaceData) => {
     try {
-        console.log(workspaceData);
         const joinCode = uuidv4().substring(0, 6).toUpperCase();
 
         const response = await workspaceRepository.create({
@@ -59,7 +58,6 @@ export const getAllWorkspaceOfUserIsMemberService = async (userId) => {
     try {
         const workspaces =
             await workspaceRepository.fetchAllWorkspceByMemberId(userId);
-        console.log(workspaces);
         return workspaces;
     } catch (error) {
         console.log('getAllWorkspaceOfUserIsMemberService error', error);
@@ -84,7 +82,6 @@ export const deleteWorkspaceService = async (workspaceId, userId) => {
         );
 
         if (isUserOwnerOfWorkspace) {
-            console.log(workspace.channels);
             await channelRepository.deleteMany(workspace.channels);
 
             const response = await workspaceRepository.delete(workspaceId);
@@ -110,7 +107,6 @@ export const isUserAdminOfWorkspace = async (userId, workspace) => {
                 member.memberId._id.toString() === userId) &&
             member.role === 'admin'
     );
-    console.log('what si res    ', response);
     return response;
 };
 
@@ -224,7 +220,6 @@ export const addMemberToWorkspaceService = async (
     try {
         const workspace = await workspaceRepository.getById(workspaceId);
         if (!workspace) {
-            console.log('workspace not found');
             throw new ClientError({
                 explanation: ['Invalid workspace id sent by client'],
                 message: 'workspace not found',
@@ -234,7 +229,6 @@ export const addMemberToWorkspaceService = async (
 
         const isValidMember = await userRepository.getById(memberId);
         if (!isValidMember) {
-            console.log('Member not found');
             throw new ClientError({
                 explanation: ['Invalid member id sent by client'],
                 message: 'Member not found',
@@ -271,14 +265,11 @@ export const addMemberToWorkspaceService = async (
             });
         }
 
-        console.log(workspace);
         const response = await workspaceRepository.addMemberToWorkspace(
             workspaceId,
             memberId,
             role
         );
-        console.log('Email : ', isValidUser.email);
-        console.log(isValidUser);
         addEmailToMailQueue({
             ...workspaceJoinMail(workspace),
             to: isValidUser.email
@@ -355,7 +346,6 @@ export const getWorkspaceByIdService = async (workspaceId, memberId) => {
             });
         }
 
-        console.log(memberId);
         const isMember = await isUserMemberOfWorkspace(memberId, workspace);
         if (!isMember) {
             throw new ClientError({

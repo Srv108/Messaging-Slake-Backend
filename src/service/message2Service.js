@@ -3,16 +3,17 @@ import { StatusCodes } from "http-status-codes";
 import message2Repository from "../repository/message2Repository.js";
 import roomRepository from "../repository/roomRepository.js";
 import ClientError from "../utils/Errors/clientError.js";
-import { createRoomService } from "./roomService.js";
+// import { createRoomService } from "./roomService.js";
 
 export const createMessageService = async(data) => {
     try {
         
-        const room = await roomRepository.getById(data.roomId);
-        if(!room){
-            const response = createRoomService(data.senderId,data.recieverId);
-            data.roomId = response._id;
-        }
+        // const room = await roomRepository.getById(data.roomId);
+        // if(!room){
+        //     const response = createRoomService(data.senderId,data.recieverId);
+        //     data.roomId = response._id;
+        // }
+
         const newMessage = await message2Repository.create(data);
         const messageDetails = await message2Repository.getMessageDetails(newMessage._id);
 
@@ -23,10 +24,10 @@ export const createMessageService = async(data) => {
     }
 }
 
-export const getAllMessageByRoomIdService = async(roomId,userId) => {
+export const getAllMessageByRoomIdService = async(messageParams,userId,page,limit) => {
     try {
 
-        const room = await roomRepository.getById(roomId);
+        const room = await roomRepository.getById(messageParams.roomId);
         if(!room){
             throw new ClientError({
                 explanation: ['Invalid room id sent by client'],
@@ -44,7 +45,13 @@ export const getAllMessageByRoomIdService = async(roomId,userId) => {
                 statusCodes: StatusCodes.UNAUTHORIZED
             });
         }
-        const messages = await message2Repository.getAllMessageByRoomId({roomId});
+        // const messages = await message2Repository.getAllMessageByRoomId({roomId});
+        const messages = await message2Repository.getPaginatedMessage(
+            messageParams,
+            page,
+            limit
+        );
+
 
         return messages;
     } catch (error) {

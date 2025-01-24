@@ -155,7 +155,6 @@ export const getRoomByIdService = async(roomId,userId) => {
     try {
         
         const room = await roomRepository.getRoomDetails(roomId)
-        console.log(room);
         if(!room){
             throw new ClientError({
                 explanation: ['room id sent by the client is invalid'],

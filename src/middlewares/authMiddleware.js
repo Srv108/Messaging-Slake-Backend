@@ -22,7 +22,6 @@ export const isAuthenticated = async (req, res, next) => {
 
         const response = await verifyToken(token, JWT_SECRET_KEY);
 
-        console.log('Jwt token part',response);
         if (!response) {
             throw res.status(StatusCodes.BAD_REQUEST).json(
                 customErrorResponse({
@@ -34,7 +33,6 @@ export const isAuthenticated = async (req, res, next) => {
 
         const user = await userRepository.getById(response.id);
         req.user = user.id;
-        console.log('user details is ', user);
         next();
     } catch (error) {
         console.log('Auth middleware error saurav', error);

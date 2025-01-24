@@ -13,7 +13,6 @@ const workspaceRepository = {
             .populate('members.memberId', 'username email avatar')
             .populate('channels');
 
-        console.log(workspace);
         return workspace;
     },
     getWorkspaceByName: async function (workspaceName) {
@@ -46,7 +45,6 @@ const workspaceRepository = {
     },
     addMemberToWorkspace: async function (workspaceId, memberId, role) {
         const workspace = await WorkSpace.findById(workspaceId);
-        console.log(workspaceId,memberId);
         if (!workspace) {
             throw new ClientError({
                 explanation: 'invalid data sent by the client side',
@@ -90,7 +88,6 @@ const workspaceRepository = {
         const workspace =
             await WorkSpace.findById(workspaceId).populate('channels');
 
-        console.log('repositories layer', workspace);
         if (!workspace) {
             throw new ClientError({
                 explanation: 'invalid data sent by the client side',

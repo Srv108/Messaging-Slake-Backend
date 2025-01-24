@@ -23,7 +23,6 @@ export const generateOtpForUserService = async(email) => {
         const otp = otpGenerator.generate(6,{lowerCaseAlphabets: false,upperCaseAlphabets: false, specialChars: false });
 
         const otpDetails = await otpRepository.create({email,otp});
-        console.log(isValidEmail);
         addEmailToMailQueue({
             ...generatedOtpMail({
                 otp: otp,

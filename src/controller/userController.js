@@ -69,7 +69,6 @@ export const updatePasswordController = async(req,res) => {
         // const user = req.user;
         const response = await updatePasswordService(req.body);
 
-        console.log(response);
         return res
         .status(StatusCodes.OK)
         .json(successResponse(response, 'Password updated Successfully'));
