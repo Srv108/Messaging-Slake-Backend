@@ -24,10 +24,9 @@ export const createMessageService = async(data) => {
     }
 }
 
-export const getAllMessageByRoomIdService = async(messageParams,userId,page,limit) => {
+export const isUserAuthenticated = async(roomId,userId) => {
     try {
-
-        const room = await roomRepository.getById(messageParams.roomId);
+        const room = await roomRepository.getById(roomId);
         if(!room){
             throw new ClientError({
                 explanation: ['Invalid room id sent by client'],
@@ -45,17 +44,42 @@ export const getAllMessageByRoomIdService = async(messageParams,userId,page,limi
                 statusCodes: StatusCodes.UNAUTHORIZED
             });
         }
+    } catch (error) {
+        console.log('Error in authenticating user to get messgae',error);
+        throw error;
+    }
+}
+
+export const getAllMessageByRoomIdService = async(messageParams,userId,page,limit) => {
+    try {
+        
+        await isUserAuthenticated(messageParams.roomId,userId);
+
         // const messages = await message2Repository.getAllMessageByRoomId({roomId});
         const messages = await message2Repository.getPaginatedMessage(
             messageParams,
             page,
             limit
         );
-
-
+        
+        
         return messages;
     } catch (error) {
         console.log('Error in getting all messgae by room id ',error);
+        throw error;
+    }
+}
+
+export const fetchLastMessageDetailsService = async(roomId,userId) => {
+    try {
+        
+        await isUserAuthenticated(roomId,userId);
+
+        const lastMessageDetails = await message2Repository.getLastMessageDetails(roomId);
+
+        return lastMessageDetails;
+    } catch (error) {
+        console.log('Error in getting last messgae by room id ',error);
         throw error;
     }
 }

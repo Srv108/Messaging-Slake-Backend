@@ -2,7 +2,7 @@ import { StatusCodes } from 'http-status-codes';
 
 import { s3 } from '../config/awsConfig.js';
 import { AWS_BUCKET_NAME } from '../config/serverConfig.js';
-import { getAllMessageByRoomIdService } from '../service/message2Service.js';
+import { fetchLastMessageDetailsService, getAllMessageByRoomIdService } from '../service/message2Service.js';
 import { getMessageService } from '../service/messageService.js';
 import {
     customErrorResponse,
@@ -89,6 +89,30 @@ export const getMessageForRoomController = async(req,res) => {
         );
     } catch (error) {
         console.log('Controller layer error  in getting message for rooms ', error);
+        if (error.statusCodes) {
+            return res
+                .status(error.statusCodes)
+                .json(customErrorResponse(error));
+        }
+        return res
+            .status(StatusCodes.INTERNAL_SERVER_ERROR)
+            .json(internalErrorResponse(error));
+    }
+}
+
+export const getLastMessageForRoomController = async(req,res) => {
+    try {
+        
+        const response = await fetchLastMessageDetailsService(req.params.roomId,req.user);
+
+        return res.status(StatusCodes.OK).json(
+            successResponse({
+                data: response,
+                messgae: 'Last Message fetched successfully'
+            })
+        );
+    } catch (error) {
+        console.log('Controller layer error  in getting last message for rooms ', error);
         if (error.statusCodes) {
             return res
                 .status(error.statusCodes)

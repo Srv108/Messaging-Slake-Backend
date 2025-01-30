@@ -22,6 +22,13 @@ const message2Repository = {
         const message = await Message2.findById(id)
             .populate('senderId', 'username email avatar _id');
         return message;
+    },
+    getLastMessageDetails: async function(roomId) {
+        const message = await Message2.findOne({roomId: roomId})
+            .sort({ createdAt: -1})
+            .populate('senderId', 'email username _id avatar');
+        
+        return message;
     }
 }
 

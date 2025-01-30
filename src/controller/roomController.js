@@ -1,8 +1,8 @@
 import { StatusCodes } from "http-status-codes";
 
 import userRepository from "../repository/userRepository.js";
-import { createRoomService, deleteRoomService, getAllRoomByUserIdService, getRoomByIdService, getRoomBySenderIdAndRecieverIdService, updateRoomStatusService } from "../service/roomService.js";
-import { customErrorResponse, internalErrorResponse } from "../utils/common/responseObject.js";
+import { createRoomService, deleteRoomService, getAllRoomByUserIdService, getMemberDetailsService, getRoomByIdService, getRoomBySenderIdAndRecieverIdService, updateRoomStatusService } from "../service/roomService.js";
+import { customErrorResponse, internalErrorResponse, successResponse } from "../utils/common/responseObject.js";
 
 export const createRoomController = async (req,res) => {
     try {
@@ -146,7 +146,30 @@ export const getRoomByIdController = async (req,res) => {
             data: response
         });
     } catch (error) {
-        console.log('Error coming in deleting room controller',error);
+        console.log('Error coming in getting room controller',error);
+        if (error.statusCodes) {
+            return res
+                .status(error.statusCodes)
+                .json(customErrorResponse(error));
+        }
+        return res
+            .status(StatusCodes.INTERNAL_SERVER_ERROR)
+            .json(internalErrorResponse(error));
+    }
+}
+
+export const getMemberDetailsController = async(req,res) => {
+    try {
+        
+        const memberDetails = await getMemberDetailsService(req.body.memberId);
+
+        return res.status(StatusCodes.OK).json(successResponse({
+            success: true,
+            messgae: 'member fetched successfully',
+            data: memberDetails
+        }))
+    } catch (error) {
+        console.log('Error coming in getting room member',error);
         if (error.statusCodes) {
             return res
                 .status(error.statusCodes)

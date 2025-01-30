@@ -178,3 +178,21 @@ export const getRoomByIdService = async(roomId,userId) => {
         throw error;
     }
 }
+
+export const getMemberDetailsService = async(memberId) => {
+    try {
+        const member = await userRepository.getUserDetails(memberId);
+        if(!member){
+            throw new ClientError({
+                explanation: ['member id sent by the client is invalid'],
+                message: 'Invalid member id',
+                statusCodes: StatusCodes.NOT_FOUND
+            });
+        }
+
+        return member;
+    } catch (error) {
+        console.log('Error coming in getting memberDetails',error);
+        throw error;
+    }
+}
