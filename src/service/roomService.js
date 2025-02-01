@@ -5,6 +5,7 @@ import roomRepository from "../repository/roomRepository.js";
 import userRepository from "../repository/userRepository.js";
 import ClientError from "../utils/Errors/clientError.js";
 import ValidationError from "../utils/Errors/validationError.js";
+import { fetchLastMessageDetailsService } from "./message2Service.js";
 
 export const createRoomService = async (senderId,recieverId) => {
     try {
@@ -57,7 +58,15 @@ export const getAllRoomByUserIdService = async(userId) => {
         
         const rooms = await roomRepository.getAllRoomsByUserId(userId);
 
-        return rooms;
+        const roomList = await Promise.all(
+            rooms.map(async(room) => {
+                const lastMessage = await fetchLastMessageDetailsService(room._id,userId);
+                console.log('rooms with last message details ',room,lastMessage);
+                return { ...room.toObject(), lastMessage};
+        }));
+
+        console.log('new room list is ',roomList);
+        return roomList;
     } catch (error) {
         console.log('Error in getting room service',error);
 

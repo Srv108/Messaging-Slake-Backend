@@ -161,7 +161,8 @@ export const getRoomByIdController = async (req,res) => {
 export const getMemberDetailsController = async(req,res) => {
     try {
         
-        const memberDetails = await getMemberDetailsService(req.body.memberId);
+        const { memberId } = req.query;
+        const memberDetails = await getMemberDetailsService(memberId);
 
         return res.status(StatusCodes.OK).json(successResponse({
             success: true,
