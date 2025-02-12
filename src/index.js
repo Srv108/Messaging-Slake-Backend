@@ -13,7 +13,7 @@ import channelSocketHandler from './controller/channelSocketController.js';
 import message2SocketHandler from './controller/message2SocketController.js'
 import messageSocketHandler from './controller/messageSocketController.js';
 import roomSocketHandler from './controller/roomSocketController.js'
-import { isAuthenticated } from './middlewares/authMiddleware.js';
+import { isAuthenticated, isAuthenticatedSocket } from './middlewares/authMiddleware.js';
 
 const app = express();
 const server = createServer(app);
@@ -38,12 +38,13 @@ app.get('/ping', isAuthenticated, (req, res) => {
 
 app.use('/api', apiRouter);
 
+/* verify authenticated socket */
+io.use(isAuthenticatedSocket);
+
 io.on('connection', (socket) => {
-    console.log('User connected',socket.id);
-    // socket.on('message', (data) => {
-    //     console.log('message coming is ',data);
-    //     io.emit('message',data);
-    // });
+    const user = socket?.user;
+    console.log('User connected',socket.id,user?.email);
+    
 
     message2SocketHandler(io,socket);
     roomSocketHandler(io,socket);

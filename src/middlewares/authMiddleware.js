@@ -8,6 +8,7 @@ import {
 } from '../utils/common/responseObject.js';
 import { verifyToken } from '../utils/jwt/jwtUtils.js';
 
+
 export const isAuthenticated = async (req, res, next) => {
     try {
         const token = req.headers['access-token'];
@@ -31,7 +32,7 @@ export const isAuthenticated = async (req, res, next) => {
             );
         }
 
-        const user = await userRepository.getById(response.id);
+        const user = await userRepository.getUserDetails(response.id);
         req.user = user.id;
         next();
     } catch (error) {
@@ -49,3 +50,27 @@ export const isAuthenticated = async (req, res, next) => {
             .json(internalErrorResponse(error));
     }
 };
+
+export const isAuthenticatedSocket = async(socket,next) => {
+    try {
+
+        const token = socket.handshake.headers['access-token']
+        if (!token) {
+            return next(new Error("Authentication error: Token is required"));
+        }
+
+
+        const response = await verifyToken(token, JWT_SECRET_KEY);
+
+        if (!response) {
+            return next(new Error('Invalid auth token provided'))
+        }
+
+        const user = await userRepository.getUserDetails(response.id);
+        socket.user = user;
+        next();
+    } catch (error) {
+        console.error("Socket Auth Middleware Error:", error);
+        next(new Error("Authentication error: Something went wrong"));
+    }
+}

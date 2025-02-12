@@ -65,6 +65,12 @@ export const getAllRoomByUserIdService = async(userId) => {
                 return { ...room.toObject(), lastMessage};
         }));
 
+        roomList.sort((a, b) => {
+            const dateA = new Date(a.lastMessage?.createdAt || 0);
+            const dateB = new Date(b.lastMessage?.createdAt || 0);
+            return dateB - dateA;
+        });
+
         console.log('new room list is ',roomList);
         return roomList;
     } catch (error) {
