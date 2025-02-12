@@ -40,7 +40,6 @@ app.use('/api', apiRouter);
 
 io.on('connection', (socket) => {
     console.log('User connected',socket.id);
-    
     // socket.on('message', (data) => {
     //     console.log('message coming is ',data);
     //     io.emit('message',data);

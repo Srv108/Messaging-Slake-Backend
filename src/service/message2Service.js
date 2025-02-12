@@ -83,3 +83,28 @@ export const fetchLastMessageDetailsService = async(roomId,userId) => {
         throw error;
     }
 }
+
+export const deleteMessageService = async(messageId,userId) => {
+    try {
+        
+        const message = await message2Repository.getMessageDetails(messageId);
+        if(message.senderId._id.toString() !== userId){
+            throw new ClientError({
+                explanation: ['user is not sender of this mssg'],
+                message: 'you are not authorised for delete this message',
+                statusCodes: StatusCodes.UNAUTHORIZED
+            });
+        }
+
+        await message2Repository.delete(messageId);
+
+        return {
+            success: 'true',
+            message: 'Message deleted successfully',
+            statusCodes: StatusCodes.OK
+        }
+    } catch (error) {
+        console.log('error in deleting message',error);
+        throw error;
+    }
+}

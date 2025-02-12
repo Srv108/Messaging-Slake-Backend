@@ -2,7 +2,7 @@ import { StatusCodes } from 'http-status-codes';
 
 import { s3 } from '../config/awsConfig.js';
 import { AWS_BUCKET_NAME } from '../config/serverConfig.js';
-import { fetchLastMessageDetailsService, getAllMessageByRoomIdService } from '../service/message2Service.js';
+import { deleteMessageService, fetchLastMessageDetailsService, getAllMessageByRoomIdService } from '../service/message2Service.js';
 import { getMessageService } from '../service/messageService.js';
 import {
     customErrorResponse,
@@ -113,6 +113,30 @@ export const getLastMessageForRoomController = async(req,res) => {
         );
     } catch (error) {
         console.log('Controller layer error  in getting last message for rooms ', error);
+        if (error.statusCodes) {
+            return res
+                .status(error.statusCodes)
+                .json(customErrorResponse(error));
+        }
+        return res
+            .status(StatusCodes.INTERNAL_SERVER_ERROR)
+            .json(internalErrorResponse(error));
+    }
+}
+
+export const deleteRoomMessageController = async(req,res) => {
+    try {
+        
+        const response = await deleteMessageService(req.params.messageId,req.user);
+
+        return res.status(StatusCodes.OK).json(
+            successResponse({
+                data: response,
+                messgae: 'Message deleted successfully'
+            })
+        );
+    } catch (error) {
+        console.log('Controller layer error  in deleting message for rooms ', error);
         if (error.statusCodes) {
             return res
                 .status(error.statusCodes)
