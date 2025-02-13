@@ -43,8 +43,7 @@ io.use(isAuthenticatedSocket);
 
 io.on('connection', (socket) => {
     const user = socket?.user;
-    console.log('User connected',socket.id,user?.email);
-    
+    console.log('User connected',socket.id,user?.email,user?.id);
 
     message2SocketHandler(io,socket);
     roomSocketHandler(io,socket);

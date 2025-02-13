@@ -19,6 +19,9 @@ const message2Schema = new mongoose.Schema(
             ref: 'Room',
             required: [true, 'channel id is required']
         },
+        imageKey: {
+            type: String
+        },
         senderId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',

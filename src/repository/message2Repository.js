@@ -6,7 +6,7 @@ const message2Repository = {
     getAllMessageByRoomId: async function(roomId){
         const messages = await Message2.find(roomId)
             .sort({createdAt: -1})
-            .populate('senderId', 'email username _id avatar');
+            .populate('senderId', 'email username _id avatar').select('-imageKey');
         return messages;
     },
     getPaginatedMessage: async function(messageParams,page,limit){
@@ -14,19 +14,19 @@ const message2Repository = {
             .sort({createdAt: 1})
             .skip((page-1)*limit)
             .limit(limit)
-            .populate('senderId', 'username email avatar _id');
+            .populate('senderId', 'username email avatar _id').select('-imageKey');
 
         return messages;
     },
     getMessageDetails: async function(id){
         const message = await Message2.findById(id)
-            .populate('senderId', 'username email avatar _id');
+            .populate('senderId', 'username email avatar _id').select('-imageKey');
         return message;
     },
     getLastMessageDetails: async function(roomId) {
         const message = await Message2.findOne({roomId: roomId})
             .sort({ createdAt: -1})
-            .populate('senderId', 'email username _id avatar');
+            .populate('senderId', 'email username _id avatar').select('-imageKey');
         
         return message;
     }
