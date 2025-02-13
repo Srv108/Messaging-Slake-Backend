@@ -20,7 +20,7 @@ const message2Repository = {
     },
     getMessageDetails: async function(id){
         const message = await Message2.findById(id)
-            .populate('senderId', 'username email avatar _id').select('-imageKey');
+            .populate('senderId', 'username email avatar _id');
         return message;
     },
     getLastMessageDetails: async function(roomId) {

@@ -174,6 +174,7 @@ export const UpdateUserDpService = async(userProfileDetails,userId) => {
                 statusCode: StatusCodes.NOT_FOUND
             })
         }
+        
         const fileKey = isValidUser?.awsKey;
         if(fileKey) await deleter(fileKey);
 

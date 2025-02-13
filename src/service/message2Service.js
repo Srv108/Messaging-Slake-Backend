@@ -1,5 +1,6 @@
 import { StatusCodes } from "http-status-codes";
 
+import { deleter } from "../config/multerConfig.js";
 import message2Repository from "../repository/message2Repository.js";
 import roomRepository from "../repository/roomRepository.js";
 import ClientError from "../utils/Errors/clientError.js";
@@ -96,6 +97,11 @@ export const deleteMessageService = async(messageId,userId) => {
             });
         }
 
+        if(message.image){
+            console.log(message.imageKey);
+            await deleter(message.imageKey);
+        }
+        
         await message2Repository.delete(messageId);
 
         return {
