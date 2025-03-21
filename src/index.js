@@ -2,7 +2,6 @@ import { createServer } from 'node:http';
 
 import cors from 'cors';
 import express from 'express';
-import fs from 'fs';
 import { StatusCodes } from 'http-status-codes';
 import { Server } from 'socket.io';
 
@@ -41,7 +40,6 @@ app.use('/api', apiRouter);
 
 /* verify authenticated socket */
 io.use(isAuthenticatedSocket);
-console.log("Checking file existence:", fs.existsSync('./src/utils/common/responseObject.js'));
 
 io.on('connection', (socket) => {
     const user = socket?.user;
