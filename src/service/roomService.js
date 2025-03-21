@@ -61,7 +61,6 @@ export const getAllRoomByUserIdService = async(userId) => {
         const roomList = await Promise.all(
             rooms.map(async(room) => {
                 const lastMessage = await fetchLastMessageDetailsService(room._id,userId);
-                console.log('rooms with last message details ',room,lastMessage);
                 return { ...room.toObject(), lastMessage};
         }));
 
@@ -71,7 +70,6 @@ export const getAllRoomByUserIdService = async(userId) => {
             return dateB - dateA;
         });
 
-        console.log('new room list is ',roomList);
         return roomList;
     } catch (error) {
         console.log('Error in getting room service',error);

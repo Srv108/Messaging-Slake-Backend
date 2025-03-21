@@ -98,7 +98,6 @@ export const deleteMessageService = async(messageId,userId) => {
         }
 
         if(message.image){
-            console.log(message.imageKey);
             await deleter(message.imageKey);
         }
         

@@ -3,6 +3,9 @@
     "version": "1.0.0",
     "main": "index.js",
     "type": "module",
+    "engines": {
+        "node": "20.x"
+    },
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "start": "npm run lint:fix && npx nodemon src/index.js",
@@ -23,6 +26,7 @@
         "dotenv": "^16.4.5",
         "eslint-plugin-simple-import-sort": "^12.1.1",
         "express": "^4.21.1",
+        "gopd": "^1.2.0",
         "http-status-codes": "^2.3.0",
         "ioredis": "^5.4.1",
         "jsonwebtoken": "^9.0.2",

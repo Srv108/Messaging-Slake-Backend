@@ -173,7 +173,6 @@ export const getDownloadPresignedUrlFromAws = async(req,res) => {
             Expires: 120,
         })
 
-        console.log('url coming from aws ',url);
         return res.status(StatusCodes.OK).json(
             successResponse({
                 data: url,
