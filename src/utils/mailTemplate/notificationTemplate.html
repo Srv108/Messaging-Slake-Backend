@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>New Message - MessageSlake</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            padding: 40px 20px;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .email-wrapper {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+            padding: 40px 30px;
+            text-align: center;
+            border-bottom: 3px solid #ffffff;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -1px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .tagline {
+            font-size: 14px;
+            color: #cccccc;
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .content {
+            padding: 50px 40px;
+            background: #ffffff;
+        }
+
+        .notification-badge {
+            display: inline-block;
+            background: #000000;
+            color: #ffffff;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+        }
+
+        .greeting {
+            font-size: 28px;
+            font-weight: 700;
+            color: #000000;
+            margin-bottom: 20px;
+            letter-spacing: -0.5px;
+        }
+
+        .message {
+            font-size: 16px;
+            color: #4a4a4a;
+            line-height: 1.8;
+            margin-bottom: 16px;
+        }
+
+        .sender-info {
+            background: #f8f8f8;
+            border-left: 4px solid #000000;
+            padding: 20px 24px;
+            margin: 30px 0;
+            border-radius: 8px;
+        }
+
+        .sender-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #000000;
+            margin-bottom: 8px;
+        }
+
+        .sender-email {
+            font-size: 14px;
+            color: #666666;
+        }
+
+        .message-preview {
+            background: linear-gradient(135deg, #000000 0%, #2d2d2d 100%);
+            color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            margin: 30px 0;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        .preview-label {
+            font-size: 12px;
+            color: #cccccc;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .preview-text {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #ffffff;
+            font-style: italic;
+        }
+
+        .message-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-top: 1px solid #e0e0e0;
+            border-bottom: 1px solid #e0e0e0;
+            margin: 30px 0;
+        }
+
+        .meta-item {
+            text-align: center;
+            flex: 1;
+        }
+
+        .meta-label {
+            font-size: 11px;
+            color: #999999;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+
+        .meta-value {
+            font-size: 14px;
+            color: #000000;
+            font-weight: 600;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #000000 0%, #2d2d2d 100%);
+            color: #ffffff;
+            text-decoration: none;
+            padding: 16px 40px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 16px;
+            text-align: center;
+            margin: 20px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .cta-container {
+            text-align: center;
+            margin: 40px 0;
+        }
+
+        .info-box {
+            background: #f8f8f8;
+            padding: 20px 24px;
+            border-radius: 8px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .info-box p {
+            font-size: 14px;
+            color: #666666;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, #e0e0e0, transparent);
+            margin: 40px 0;
+        }
+
+        .footer {
+            background: #f5f5f5;
+            padding: 40px 30px;
+            text-align: center;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .footer-text {
+            font-size: 13px;
+            color: #666666;
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+
+        .copyright {
+            font-size: 12px;
+            color: #999999;
+            margin-top: 20px;
+        }
+
+        .footer-links {
+            margin: 20px 0;
+        }
+
+        .footer-link {
+            color: #000000;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 600;
+            margin: 0 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        @media only screen and (max-width: 600px) {
+            body {
+                padding: 20px 10px;
+            }
+
+            .content {
+                padding: 40px 24px;
+            }
+
+            .greeting {
+                font-size: 24px;
+            }
+
+            .header {
+                padding: 30px 20px;
+            }
+
+            .logo {
+                font-size: 28px;
+            }
+
+            .footer {
+                padding: 30px 20px;
+            }
+
+            .message-meta {
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .meta-item {
+                width: 100%;
+                border-bottom: 1px solid #e0e0e0;
+                padding-bottom: 12px;
+            }
+
+            .meta-item:last-child {
+                border-bottom: none;
+                padding-bottom: 0;
+            }
+
+            .footer-link {
+                display: block;
+                margin: 8px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-wrapper">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">MessageSlake</div>
+            <div class="tagline">Secure Communication</div>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <div class="notification-badge">📬 New Message</div>
+            
+            <h1 class="greeting">Hi ${recipientName}!</h1>
+            
+            <p class="message">
+                You have a new message waiting for you on <strong>MessageSlake</strong>. 
+                Don't miss out on the conversation!
+            </p>
+
+            <!-- Sender Info -->
+            <div class="sender-info">
+                <div class="sender-name">From: ${senderName}</div>
+                <div class="sender-email">${senderEmail}</div>
+            </div>
+
+            <!-- Message Preview -->
+            <div class="message-preview">
+                <div class="preview-label">Message Preview</div>
+                <div class="preview-text">"${messagePreview}"</div>
+            </div>
+
+            <!-- Message Meta -->
+            <div class="message-meta">
+                <div class="meta-item">
+                    <div class="meta-label">Type</div>
+                    <div class="meta-value">${messageType}</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Received</div>
+                    <div class="meta-value">${timestamp}</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Has Image</div>
+                    <div class="meta-value">${hasImage}</div>
+                </div>
+            </div>
+
+            <!-- CTA Button -->
+            <div class="cta-container">
+                <a href="#" class="cta-button">Open MessageSlake</a>
+            </div>
+
+            <div class="info-box">
+                <p>
+                    💡 <strong>Tip:</strong> Stay connected by enabling push notifications 
+                    to receive instant alerts for new messages.
+                </p>
+            </div>
+
+            <div class="divider"></div>
+
+            <p class="message" style="font-size: 14px; color: #666666; text-align: center;">
+                This is an automated notification. Please do not reply to this email.
+            </p>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p class="footer-text">
+                Thank you for using <strong>MessageSlake</strong> for your communication needs.
+            </p>
+            
+            <div class="footer-links">
+                <a href="#" class="footer-link">Manage Notifications</a>
+                <a href="#" class="footer-link">Privacy Policy</a>
+                <a href="#" class="footer-link">Help Center</a>
+            </div>
+
+            <p class="copyright">
+                &copy; 2024 MessageSlake by Saurabh Bharti. All rights reserved.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

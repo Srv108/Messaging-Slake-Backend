@@ -53,11 +53,17 @@ export const isAuthenticated = async (req, res, next) => {
 
 export const isAuthenticatedSocket = async(socket,next) => {
     try {
-
-        const token = socket.handshake.headers['access-token']
+        // Try to get token from headers first, then from auth object
+        const token = socket.handshake.headers['access-token'] || socket.handshake.auth?.token;
+        
         if (!token) {
+            console.error('[Socket Auth] No token found in headers or auth object');
+            console.error('[Socket Auth] Headers:', socket.handshake.headers);
+            console.error('[Socket Auth] Auth:', socket.handshake.auth);
             return next(new Error("Authentication error: Token is required"));
         }
+        
+        console.log('[Socket Auth] Token found, length:', token.length);
 
 
         const response = await verifyToken(token, JWT_SECRET_KEY);

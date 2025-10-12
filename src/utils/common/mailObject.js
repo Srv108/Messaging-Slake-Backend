@@ -27,3 +27,26 @@ export function generatedOtpMail(userDetails) {
         html: emailHtmlContent
     }
 }
+
+export function generatedNotificationMail(notificationData) {
+    const filename = new URL(import.meta.url).pathname;
+    const __dirname = path.dirname(filename);
+    const notificationTemplatePath = path.resolve(__dirname, '../mailTemplate/notificationTemplate.html');
+
+    const htmlTemplate = fs.readFileSync(notificationTemplatePath, 'utf-8');
+    const emailHtmlContent = htmlTemplate
+        .replace('${recipientName}', notificationData.recipientName)
+        .replace('${senderName}', notificationData.senderName)
+        .replace('${senderEmail}', notificationData.senderEmail)
+        .replace('${messagePreview}', notificationData.messagePreview)
+        .replace('${messageType}', notificationData.messageType)
+        .replace('${timestamp}', new Date(notificationData.timestamp).toLocaleString())
+        .replace('${hasImage}', notificationData.hasImage ? 'Yes' : 'No');
+
+    return {
+        from: MAIL_ID,
+        to: notificationData.recipientEmail,
+        subject: `New message from ${notificationData.senderName} on MessageSlake`,
+        html: emailHtmlContent
+    };
+}

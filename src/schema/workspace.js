@@ -22,6 +22,9 @@ const workspaceSchema = new mongoose.Schema(
         description: {
             type: String
         },
+        image: {
+            type: String
+        },
         joinCode: {
             type: String,
             required: [true, 'code is required to join server']
