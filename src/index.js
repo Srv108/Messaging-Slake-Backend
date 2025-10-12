@@ -15,7 +15,7 @@ import channelSocketHandler from './controller/channelSocketController.js';
 import message2SocketHandler from './controller/message2SocketController.js'
 import messageSocketHandler from './controller/messageSocketController.js';
 import roomSocketHandler from './controller/roomSocketController.js'
-import { isAuthenticated, isAuthenticatedSocket } from './middlewares/authMiddleware.js';
+import { isAuthenticatedSocket } from './middlewares/authMiddleware.js';
 import socketManager from './utils/socketManager.js';
 
 const app = express();
