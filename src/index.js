@@ -1,4 +1,6 @@
-import { createServer } from 'node:http';
+import { existsSync,readFileSync } from 'node:fs';
+import { createServer as createHttpServer } from 'node:http';
+import { createServer as createHttpsServer } from 'node:https';
 
 import cors from 'cors';
 import express from 'express';
@@ -8,7 +10,7 @@ import { Server } from 'socket.io';
 import apiRouter from '../src/router/apiRoutes.js';
 import bullServerAdapter from './config/bullboardConfig.js';
 import { connectDB } from './config/dbConfig.js';
-import { PORT } from './config/serverConfig.js';
+import { PORT, SSL_CERT_DATA, SSL_CERT_PATH, SSL_KEY_DATA, SSL_KEY_PATH, USE_HTTPS } from './config/serverConfig.js';
 import channelSocketHandler from './controller/channelSocketController.js';
 import message2SocketHandler from './controller/message2SocketController.js'
 import messageSocketHandler from './controller/messageSocketController.js';
@@ -17,7 +19,54 @@ import { isAuthenticated, isAuthenticatedSocket } from './middlewares/authMiddle
 import socketManager from './utils/socketManager.js';
 
 const app = express();
-const server = createServer(app);
+let server;
+
+// Configure HTTPS if enabled and certificates are available
+if (USE_HTTPS) {
+    try {
+        let options;
+
+        // Priority 1: Use inline certificate data from .env (SSL_KEY_DATA, SSL_CERT_DATA)
+        if (SSL_KEY_DATA && SSL_CERT_DATA) {
+            // Replace literal \n with actual newlines for multiline certificates
+            const key = SSL_KEY_DATA.replace(/\\n/g, '\n');
+            const cert = SSL_CERT_DATA.replace(/\\n/g, '\n');
+            
+            options = { key, cert };
+            console.log('✅ HTTPS server created with inline SSL certificate data from .env');
+        }
+        // Priority 2: Use certificate files (SSL_KEY_PATH, SSL_CERT_PATH)
+        else if (SSL_KEY_PATH && SSL_CERT_PATH) {
+            // Check if certificate files exist
+            if (!existsSync(SSL_KEY_PATH)) {
+                throw new Error(`SSL key file not found at: ${SSL_KEY_PATH}`);
+            }
+            if (!existsSync(SSL_CERT_PATH)) {
+                throw new Error(`SSL certificate file not found at: ${SSL_CERT_PATH}`);
+            }
+
+            options = {
+                key: readFileSync(SSL_KEY_PATH),
+                cert: readFileSync(SSL_CERT_PATH)
+            };
+            console.log('✅ HTTPS server created with SSL certificate files');
+            console.log('   Key:', SSL_KEY_PATH);
+            console.log('   Cert:', SSL_CERT_PATH);
+        } else {
+            throw new Error('No SSL certificates configured. Set either SSL_KEY_DATA/SSL_CERT_DATA or SSL_KEY_PATH/SSL_CERT_PATH');
+        }
+
+        server = createHttpsServer(options, app);
+    } catch (error) {
+        console.error('❌ Failed to create HTTPS server:', error.message);
+        console.log('⚠️  Falling back to HTTP server');
+        server = createHttpServer(app);
+    }
+} else {
+    server = createHttpServer(app);
+    console.log('ℹ️  Running HTTP server (non-secure)');
+    console.log('   To enable HTTPS, set USE_HTTPS=true in .env file');
+}
 const io = new Server(server, {
     cors: {
         origin: '*',
@@ -39,7 +88,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/ui', bullServerAdapter.getRouter());
 
-app.get('/ping', isAuthenticated, (req, res) => {
+app.get('/ping', (req, res) => {
     res.status(StatusCodes.OK).json({
         message: 'Pong Hui Hui 🙂!'
     });
