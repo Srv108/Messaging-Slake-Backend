@@ -70,7 +70,13 @@ if (USE_HTTPS) {
 const io = new Server(server, {
     cors: {
         origin: '*',
-        methods: ['GET', 'POST']
+        credentials: true,  // Enable credentials (cookies, authorization headers)
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+        allowedHeaders: ['Content-Type', 'Authorization', 'access-token', 'x-requested-with'],
+        exposedHeaders: ['access-token', 'refresh-token'],
+        maxAge: 600,  // How long the results of a preflight request can be cached (in seconds)
+        preflightContinue: false,
+        optionsSuccessStatus: 204
     },
     // Prevent automatic disconnections
     pingTimeout: 60000,        // 60 seconds - time to wait for pong response

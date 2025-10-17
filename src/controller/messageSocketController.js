@@ -8,6 +8,19 @@ export default function messageHandler(io, socket) {
         const channelId = data.channelId.toString();
         const senderId = data.senderId.toString();
 
+        /* validate the senderId sent in the message data and the senderId from the socket to secure messaging */
+        const socketUserData = socket.user;
+        if(socketUserData._id.toString() != senderId){
+            console.log('[ChannelMessage] ❌ Invalid senderId in request');
+            const errorResponse = {
+                success: false,
+                message: 'Invalid senderId'
+            };
+            callback?.(errorResponse);
+            console.log('[ChannelMessage] ❌ Error response sent:', JSON.stringify(errorResponse, null, 2));
+            return;
+        }
+
         // Create optimistic message object for instant delivery
         const optimisticMessage = {
             _id: `temp_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
@@ -18,7 +31,9 @@ export default function messageHandler(io, socket) {
             workspaceId: data.workspaceId,
             senderId: {
                 _id: senderId,
-                ...socket.user
+                username: socketUserData.username,
+                email: socketUserData.email,
+                avatar: socketUserData.avatar
             },
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
