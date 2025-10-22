@@ -203,16 +203,54 @@ io.on('connection', (socket) => {
         })
     })
 
-    socket.on('ice-candidate', ({ from, to, candidate }, callback) => {
-        console.log(`candidate coming from ${from.email} to ${to.room}`);
-        socket.to(to.room).emit('newIce-candidate', { candidate, from: socket.id });
+    socket.on('ice-candidate', ({ candidate, from, to }, callback) => {
+        console.log(`ICE candidate from ${from.email} to ${to.room}`, candidate);
+        
+        // Forward the ICE candidate to the target user
+        socket.to(to.room).emit('ice-candidate', { 
+            candidate,
+            from,
+            to: {
+                user: {
+                    id: from.id,
+                    username: from.username,
+                    email: from.email
+                },
+                room: to.room
+            }
+        });
 
         callback({
             success: true,
-            message: 'Successfully recieved and forward candidate to the remote peer',
-            data: candidate
-        })
-    })
+            message: 'ICE candidate forwarded successfully'
+        });
+    });
+
+    socket.on('renegotiation-needed', ({ from, to }, callback) => {
+        console.log(`Renegotiation needed from ${from.email} to ${to.room}`);
+        
+        // Target the initiator (the one who needs to create the new offer)
+        // Assuming the *other* user in the room is the one who initiated the first call.
+        // If you track who is the initiator on the server, use that info.
+        // Otherwise, you must send a request to the *other* person in the room.
+        
+        // Emit the request back to the room (everyone but the sender)
+        socket.to(to.room).emit('renegotiation-request', { from, to });
+
+        callback({
+            success: true,
+            message: 'Renegotiation request forwarded'
+        });
+    });
+
+    // Add error handling for offer/answer
+    const handleSignalingError = (socket, error, type) => {
+        console.error(`Error in ${type}:`, error);
+        socket.emit('webrtc-error', {
+            type: type,
+            error: error.message || 'Unknown error occurred'
+        });
+    };
 
     socket.on('disconnect', (reason) => {
         console.log('\n========== DISCONNECTION ==========');
