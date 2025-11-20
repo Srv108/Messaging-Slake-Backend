@@ -243,14 +243,14 @@ io.on('connection', (socket) => {
         });
     });
 
-    // Add error handling for offer/answer
-    const handleSignalingError = (socket, error, type) => {
-        console.error(`Error in ${type}:`, error);
-        socket.emit('webrtc-error', {
-            type: type,
-            error: error.message || 'Unknown error occurred'
-        });
-    };
+    // // Add error handling for offer/answer
+    // const handleSignalingError = (socket, error, type) => {
+    //     console.error(`Error in ${type}:`, error);
+    //     socket.emit('webrtc-error', {
+    //         type: type,
+    //         error: error.message || 'Unknown error occurred'
+    //     });
+    // };
 
     socket.on('disconnect', (reason) => {
         console.log('\n========== DISCONNECTION ==========');
